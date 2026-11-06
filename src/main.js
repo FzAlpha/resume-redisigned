@@ -306,7 +306,7 @@ if (import.meta.env.DEV) {
 
   // ?skip&capture renders one frame per act into public/stills/ (fallback for weak devices).
   async function captureStills() {
-    const SHOTS = { hero: 0.02, about: 0.4, skills: 0.62, projects: 0.62, intermission: 0.66, terminal: 0.4, contact: 0.55, credits: 0.3 };
+    const SHOTS = { hero: 0.02, about: 0.85, skills: 0.62, projects: 0.62, intermission: 0.66, terminal: 0.4, contact: 0.55, credits: 0.3 };
     const WAIT = { skills: 8000 }; // let Infinian finish his spawn
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const suffix = innerHeight > innerWidth ? '-p' : '';

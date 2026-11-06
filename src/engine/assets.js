@@ -9,7 +9,9 @@ const BASE = import.meta.env.BASE_URL;
 // Story order = download order. `act` is where the model is first needed.
 export const MODELS = [
   { id: 'wings',     act: 'hero' },
+  { id: 'feathers',  act: 'hero' },
   { id: 'butterfly', act: 'hero' },
+  { id: 'queen',     act: 'hero' }, // joins the opening as soon as she arrives
   { id: 'infinian',  act: 'skills' },
   { id: 'arm',       act: 'projects' },
   { id: 'angel',     act: 'intermission' },

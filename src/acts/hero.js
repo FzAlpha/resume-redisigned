@@ -1,6 +1,8 @@
-// PROLOGUE + HERO — boot sequence, wings opening in the dark, title card.
+// PROLOGUE + HERO — boot sequence, the winged Queen of Swords in the god-light,
+// a feather storm that bursts on the title card.
 import * as THREE from 'three';
 import { fitModel } from '../engine/assets.js';
+import { FeatherStorm } from './feathers.js';
 import { lerp, smooth, track } from './util.js';
 
 const BOOT_LINES = [
@@ -17,7 +19,7 @@ const BOOT_LINES = [
 
 export default {
   id: 'hero', nav: 'home', hud: ['Prologue', ''],
-  models: ['wings'],
+  models: ['wings', 'feathers'], // the Queen joins as soon as she has downloaded
   mix: { epic: 0.42, calm: 0 },
   mood: {
     sky: { top: '#04060c', bottom: '#000000', glow: '#13254a', dir: [0, 0.35, -1] },
@@ -37,8 +39,8 @@ export default {
     const wings = assets.get('wings').scene;
     this.wings = new THREE.Group();
     this.wings.add(wings);
-    fitModel(wings, { size: 3.6, axis: 'x' });
-    this.wings.position.set(0, 1.6, 0);
+    fitModel(wings, { size: 4.2, axis: 'x' });
+    this.wings.position.set(0, 2.25, -0.45); // on the Queen's back, at shoulder height
     wings.traverse((o) => {
       if (o.isMesh && o.material) { o.material.envMapIntensity = 0.25; o.material.color?.multiplyScalar(0.55); }
     });
@@ -46,12 +48,67 @@ export default {
 
     // A soft glow card behind the wings gap — the "god light".
     this.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTexture(), color: 0xffe2b0, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
-    this.glow.scale.set(3.4, 3.4, 1);
-    this.glow.position.set(0, 1.75, -0.6);
+    this.glow.scale.set(4.2, 4.2, 1);
+    this.glow.position.set(0, 2.3, -1.0);
     this.root.add(this.glow);
+
+    // Feathers drifting through the light.
+    this.feathers = new FeatherStorm(assets.get('feathers'), { perType: stage.tier === 'hd' ? 55 : 28 });
+    this.root.add(this.feathers.group);
+
+    // The Queen of Swords stands in front of the wings once her file arrives.
+    this.queenSlot = new THREE.Group();
+    this.queenSlot.position.set(0, 0.15, 0);
+    this.root.add(this.queenSlot);
+    // A soft cool light in front of her so she reads pale and ghostly, not as a silhouette.
+    this.queenLight = new THREE.PointLight(0xcfe0ff, 0, 7, 1.4);
+    this.queenLight.position.set(0.6, 2.8, 2.4);
+    this.queenSlot.add(this.queenLight);
+    this.queenFade = 0;
 
     this.introT = -1;
     stage.scene.add(this.root);
+  },
+
+  /** Attach the Queen (once) when her model is downloaded; she fades in. */
+  _maybeQueen(ctx) {
+    if (this.queen || this.queenLoading || !ctx.assets.isDownloaded('queen')) return;
+    this.queenLoading = true;
+    ctx.assets.prepare('queen').then((gltf) => {
+      const q = gltf.scene;
+      this.queenSlot.add(q);
+      fitModel(q, { size: 3.2, axis: 'y', anchor: 'bottom' });
+      this.queenMats = [];
+      const seen = new Set(); // materials are shared between parts — record each once
+      q.traverse((o) => {
+        if (!o.isMesh || !o.material) return;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((m) => {
+          if (seen.has(m)) return;
+          seen.add(m);
+          m.envMapIntensity = 0.5;
+          this.queenMats.push({ m, transparent: m.transparent, opacity: m.opacity });
+          m.transparent = true;
+          m.opacity = 0;
+        });
+      });
+      this.queenMixer = new THREE.AnimationMixer(q);
+      if (gltf.animations[0]) this.queenMixer.clipAction(gltf.animations[0]).play();
+      this.queen = q;
+    });
+  },
+
+  _queenTick(dt) {
+    if (!this.queen) return;
+    this.queenMixer.update(dt);
+    this.queenLight.intensity = 9 * this.queenFade;
+    if (this.queenFade < 1) {
+      this.queenFade = Math.min(1, this.queenFade + dt / 1.8);
+      for (const s of this.queenMats) {
+        s.m.opacity = s.opacity * this.queenFade;
+        if (this.queenFade >= 1) s.m.transparent = s.transparent;
+      }
+    }
   },
 
   /** Plays the timed opening. Resolves when the viewer has control. */
@@ -99,9 +156,9 @@ export default {
     if (t > 2.2) this._cue('boot-off', () => { audio.play('glitch', { volume: 0.45 }); ui.boot(false); audio.mix({ epic: 0.55, calm: 0 }, 4); });
     g.uFade.value = 1 - smooth(2.4, 4.0, t);
 
-    // Camera: slow push in on the wings.
+    // Camera: slow push in on the winged Queen.
     const push = smooth(2.2, 7.5, t);
-    stage.shot(new THREE.Vector3(0, 1.7, lerp(11, 7.6, push)), new THREE.Vector3(0, 1.7, 0), 35);
+    stage.shot(new THREE.Vector3(0, 1.9, lerp(12.5, 9, push)), new THREE.Vector3(0, 1.95, 0), 35);
     if (t < 2.3) stage.cut();
 
     // Back light blooms open.
@@ -111,15 +168,23 @@ export default {
     if (t > 2.6) this._cue('wings', () => audio.play('wings', { volume: 0.7 }));
 
     // Impact + title card.
-    if (t > 5.0) this._cue('impact', () => { audio.play('impact', { volume: 0.9, duck: 0.45 }); ui.titleCard(true); });
+    if (t > 5.0) this._cue('impact', () => {
+      audio.play('impact', { volume: 0.9, duck: 0.45 });
+      ui.titleCard(true);
+      this.feathers.burst(new THREE.Vector3(0, 2.2, 0), 5);
+    });
     g.uFlash.value = t > 5.0 ? Math.max(0, 0.7 - (t - 5.0) * 1.6) : 0;
 
     if (t > 8.4) this._cue('end', () => this.finishIntro());
-    this._animate();
+    this._animate(dt, ctx, smooth(2.4, 4.5, t));
   },
 
-  _animate() {
-    this.wings.rotation.y = Math.sin(performance.now() * 0.0003) * 0.08;
+  _animate(dt, ctx, featherOpacity = 1) {
+    const t = performance.now() / 1000;
+    this.wings.rotation.y = Math.sin(t * 0.3) * 0.06;
+    this.feathers.update(dt, t, featherOpacity);
+    this._maybeQueen(ctx);
+    this._queenTick(dt);
   },
 
   enter() { this.root.visible = true; },
@@ -130,12 +195,13 @@ export default {
     const { stage, ui } = ctx;
     const portrait = stage.isPortrait;
 
-    // Wings sit to the right of the copy on desktop, centred on phones.
-    const x = portrait ? 0 : -1.9;
+    // The winged Queen sits to the right of the copy on desktop, high and centred on phones.
+    // Scrolling: push in to her face, then rise over her head into the light between the wings.
+    const x = portrait ? 0 : -2.3;
     const v = track([
-      { p: 0, pos: [x, portrait ? 0.6 : 1.6, portrait ? 11.5 : 7.6], look: [x, portrait ? 0.15 : 1.6, 0], fov: 35 },
-      { p: 0.55, pos: [x * 0.4, 1.7, 4.2], look: [0, 1.75, 0], fov: 38 },
-      { p: 1, pos: [0, 1.75, 0.9], look: [0, 1.75, -2], fov: 48 },
+      { p: 0, pos: [x, portrait ? 1.0 : 1.9, portrait ? 14 : 9.2], look: [x, portrait ? 0.4 : 1.95, 0], fov: 35 },
+      { p: 0.55, pos: [x * 0.3, 2.7, 4.6], look: [0, 2.6, 0], fov: 36 },
+      { p: 1, pos: [0, 3.6, 0.9], look: [0, 3.0, -3], fov: 50 },
     ], p, this._pos ||= new THREE.Vector3(), this._look ||= new THREE.Vector3());
     stage.shot(this._pos, this._look, v.fov, v.roll);
 
@@ -143,7 +209,7 @@ export default {
     this.glow.material.opacity = lerp(0.3, 0.8, smooth(0.5, 1, p));
     stage.grade.uniforms.uFade.value = smooth(0.82, 1, p);
     ui.heroCopy(1 - smooth(0.08, 0.32, p));
-    this._animate();
+    this._animate(dt, ctx);
   },
 };
 

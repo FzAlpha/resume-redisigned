@@ -4,8 +4,8 @@ A scroll-driven short film. One WebGL stage sits behind the page; every section 
 
 | Act | Section | Model |
 |---|---|---|
-| Prologue | Home | Angel Wings (boot log, title card) |
-| I | About | Fantasy Butterfly (also perches on the typing cursor and returns in the credits) |
+| Prologue | Home | The Queen of Swords with angel wings, a feather storm that bursts on the title card |
+| I | About | A 360° night room (Poly Haven HDRI) — the wall screen wakes with a neofetch readout; the butterfly flies through |
 | II | Skills | Infinian — hover a skill card to trigger a skill animation |
 | III | Projects | Robotic Prosthetic Arm — its animation is scrubbed by scrolling |
 | Intermission | — | Angel assembles, camera flies through the halo |
@@ -27,7 +27,8 @@ npm run preview   # serve the built site
 - **Sound** — visitors are asked on every visit. Two music beds (`public/audio/score-*.mp3`) crossfade per act; effects duck the music. Small UI sounds are synthesized in `src/engine/audio.js`.
 - **Downloads** — `src/engine/assets.js` downloads all models in parallel in story order; the next act always jumps the queue. The reel (bottom-left) shows progress.
 - **Quality tiers** — `hd` (desktop, 2048px textures), `sd` (phones, 1024px), `still` (weak devices / no WebGL: pre-rendered images from `public/stills/`). A frame-rate watchdog downgrades automatically. Force one with `?tier=hd|sd|still`.
-- **Models** — originals live in `modelss/` (not committed, 490 MB). `npm run models` recompresses them into `public/models/hd` and `public/models/sd` (~40 MB / ~20 MB).
+- **Models** — originals live in `modelss/` (not committed). `npm run models` recompresses them into `public/models/hd` and `public/models/sd`.
+- **Room** — `node scripts/convert-room.mjs` turns the Hotel Room HDRI (`modelss/model 11`) into the night-graded panorama `public/env/room-night.webp`.
 
 ## Dev helpers (dev server only)
 

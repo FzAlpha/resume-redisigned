@@ -13,6 +13,8 @@ const MODELS = {
   angel:     'modelss/model 1 a/angel.glb',
   k2so:      'modelss/model 3 a/free_droide_de_seguridad_k-2so_by_oscar_creativo.glb',
   astraia:   'modelss/model 5 a/astraia - Copy.glb',
+  queen:     'modelss/model 9 a/the_queen_of_swords.glb',
+  feathers:  'modelss/model 10/3_great_feathers_pack.glb',
 };
 
 const VARIANTS = [
