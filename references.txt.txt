@@ -1,0 +1,53 @@
+Website Translation
+* tilde-nlp/website-translator: In-browser JavaScript library for dynamic, on-the-fly website localization.
+* Immersive Translate: Bilingual translation tool that preserves original formatting and code blocks side-by-side.
+
+Liquid Glass & Frosted UI
+* moekoelueker/open-glass-ui: CSS-first React UI system for creating Apple-inspired frosted liquid glass components.
+* ybouane/liquidglass: WebGL-powered shader library for realistic glass refraction and chromatic aberration on HTML elements.
+* Mael-667/Liquid-Glass-CSS: Lightweight CSS/JS library using SVG displacement for dynamic frosted glass effects.
+
+Interactive UI & Components (AI-Native)
+* Shadcn UI: AI-native, copy-paste React/Tailwind component architecture for accessible, production-ready core UI.
+* Aceternity UI: Copy-and-paste React component library for complex, animated UI elements like parallax cards and background beams.
+* Magic UI: Animated component library for design engineers featuring magnetic buttons, marquees, and retro-futuristic borders.
+* React Bits: Collection of highly interactive, eye-catching React components like text assembly and custom cursors.
+* Tremor: Tailwind-based React library specializing in beautiful data visualization and dashboard metric cards.
+
+Motion, Physics & Micro-Interactions
+* Framer Motion: The industry-standard React animation library powered by spring physics for fluid layout transitions and gestures.
+* Atropos.js: Lightweight library for creating stunning 3D parallax hover effects similar to Apple tvOS cards.
+* React UseGesture: Utility library that ties complex mouse and touch physics (drag, pinch, swipe) directly to UI elements.
+
+3D, WebGL & Shaders
+* React Three Fiber (R3F): Declarative React renderer for Three.js to build complex 3D scenes and models in the browser.
+* Drei: Ecosystem of pre-built, open-source 3D helpers (text, shadows, camera controls) designed to work alongside R3F.
+* Curtains.js: WebGL library that converts HTML elements into 3D planes for custom shader effects like ripples and tearing.
+* OGL: Minimalist, low-level WebGL framework for fine-grained control over rendering pipelines and custom shaders.
+
+Vector Animations
+* Rive: Lightweight runtime for real-time, interactive vector animations driven by state machines.
+* LottieWeb: Standard engine for rendering complex Adobe After Effects vector animations natively on the web.
+
+Scroll Dynamics & Parallax
+* Lenis: Premier open-source smooth scrolling library that interpolates scroll physics for a buttery cinematic feel.
+* Ukiyo.js: Dependency-free JavaScript library for creating incredibly smooth, Apple-style background image parallax effects.
+
+Backgrounds & Particles
+* tsParticles: Dependency-free engine for creating highly customizable particle networks, confetti, and fireworks backgrounds.
+
+Typography & Text Effects
+* SplitType: Utility tool that splits HTML text into individual characters, words, and lines for advanced typography animation.
+* GSAP (GreenSock): Powerful, industry-standard JavaScript animation engine perfect for complex timeline and scroll-driven text reveals.
+
+Niche Aesthetics (Terminal/Retro)
+* Arwes: Sci-fi web framework for building user interfaces with cyberpunk styling, glowing borders, and scanlines.
+* Baffle.js: Tiny JavaScript library that creates a hacker-style ASCII character-scrambling reveal animation for text.
+
+Claude Design Templates & Systems
+* VoltAgent/awesome-claude-design: A repository of ready-made DESIGN.md templates to feed Claude for generating instant, cohesive design systems (colors, typography, layout rules).
+
+UI Blocks & Wireframe Libraries
+* Preline UI: Massive open-source Tailwind CSS library providing complete, ready-to-copy UI blocks and templates (dashboards, pricing, hero sections) that act as high-fidelity wireframes.
+* FlyonUI: Tailwind library combining semantic classes with robust plugins, including ready-made structural blocks and an accompanying Figma design system.
+* Tailgrids UI: Comprehensive React and Tailwind library offering over 600 components, blocks, and templates tailored for scaffolding production-ready SaaS apps and landing pages.

@@ -4,6 +4,8 @@ import { Stage } from './engine/stage.js';
 import { AssetDirector, ACT_ORDER, detectTier } from './engine/assets.js';
 import { SoundDirector } from './engine/audio.js';
 import { UI } from './ui/ui.js';
+import { Gate } from './ui/gate.js';
+import { Film, FILM } from './ui/film.js';
 import { initTerminal } from './ui/terminal.js';
 import { Companion } from './acts/companion.js';
 import { clamp } from './acts/util.js';
@@ -32,9 +34,26 @@ const ui = new UI(audio);
 initTerminal({ audio, events });
 audio.onchange = (on) => ui.soundButton(on);
 
+const gate = new Gate(audio);
 const assets = new AssetDirector(tier, { concurrency: tier === 'hd' ? 3 : 2 });
-assets.addEventListener('progress', (e) => ui.reel(e.detail.list));
+// The gate's counter follows the opening scene (the hero's models); the reel shows everything.
+function openingProgress(list) {
+  if (tier === 'still') return 1;
+  const need = list.filter((it) => hero.models.includes(it.id));
+  if (!need.length) return 1;
+  return need.reduce((s, it) => s + ((it.state === 'downloaded' || it.state === 'ready') ? 1 : it.total ? (it.loaded / it.total) * 0.98 : 0), 0) / need.length;
+}
+// The opening film (Blender render) buffers while the gate counts; 1080p on big screens, 720p otherwise.
+const film = new Film({ hd: tier === 'hd' && Math.max(innerWidth, innerHeight) * devicePixelRatio >= 1600 });
+if (!reducedMotion) film.load();
+let modelsP = 0;
+const gateProgress = () => gate.setProgress(modelsP * 0.65 + (reducedMotion ? 1 : film.progress()) * 0.35);
+assets.addEventListener('progress', (e) => { ui.reel(e.detail.list); modelsP = openingProgress(e.detail.list); gateProgress(); });
 ui.reel([...assets.items.values()]);
+modelsP = openingProgress([...assets.items.values()]);
+const filmPoll = setInterval(() => { gateProgress(); if (film.progress() >= 1) clearInterval(filmPoll); }, 250);
+film.video.addEventListener('progress', gateProgress);
+film.video.addEventListener('canplaythrough', gateProgress);
 
 // ------------------------------------------------------------------ acts
 for (const act of ACTS) {
@@ -50,7 +69,7 @@ let companion = null;
 if (tier !== 'still') {
   try {
     stage = new Stage(document.getElementById('stage'), { tier });
-    ctx = { stage, assets, audio, ui, events };
+    ctx = { stage, assets, audio, ui, events, film };
     companion = new Companion(ctx);
   } catch (err) {
     console.warn('[stage] WebGL failed, using stills', err);
@@ -224,13 +243,14 @@ function waitFor(cond) {
   return new Promise((res) => { const tick = () => (cond() ? res() : nextFrame(tick)); tick(); });
 }
 
+let filmStarting = false;
 async function startFilm(withSound) {
+  if (filmStarting) return;
+  filmStarting = true;
   audio.setEnabled(withSound);
   ui.soundButton(withSound);
-  const gate = document.getElementById('gate');
-  gate.classList.add('is-gone');
+  gate.hide();
   document.body.classList.remove('is-gated');
-  setTimeout(() => gate.remove(), 1200);
   window.scrollTo(0, 0);
 
   current = hero;
@@ -258,6 +278,18 @@ function stillIntro() {
   return new Promise((resolve) => {
     document.body.classList.add('is-intro');
     ui.letterbox(true);
+    if (!reducedMotion && film.playable) {
+      // Weak devices still get the film: video decoding is cheap where WebGL is not.
+      let finished = false;
+      const done = () => { if (finished) return; finished = true; film.stop(); ui.titleCard(false); ui.letterbox(false); document.body.classList.remove('is-intro'); resolve(); };
+      stillIntro.skip = done;
+      audio.mix({ epic: 0.38 }, 3);
+      film.cues = [];
+      film.at(FILM.flash, () => { audio.play('impact', { volume: 0.9, duck: 0.45 }); ui.titleCard(true); });
+      film.at(FILM.handoff, () => film.fadeOut());
+      film.play().then(done);
+      return;
+    }
     ui.titleCard(true);
     audio.play('impact', { volume: 0.8 });
     audio.mix({ epic: 0.5 }, 3);
@@ -267,8 +299,7 @@ function stillIntro() {
   });
 }
 
-document.getElementById('gate-sound').addEventListener('click', () => startFilm(true), { once: true });
-document.getElementById('gate-silent').addEventListener('click', () => startFilm(false), { once: true });
+gate.waitForEnter().then((withSound) => startFilm(withSound));
 document.getElementById('sound-toggle').addEventListener('click', () => {
   audio.toggle();
   if (audio.enabled && current) audio.mix(current.mix, 1.5);

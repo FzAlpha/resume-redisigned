@@ -157,6 +157,8 @@ export default {
     const cam = stage.camera;
     const v3 = (this._v ||= new THREE.Vector3());
     const w = innerWidth, h = innerHeight;
+    // Labels must not cover the contact form (left) or run off the right edge.
+    const formRight = (this._block ||= document.querySelector('.contact-block'))?.getBoundingClientRect().right ?? 0;
     this.hands.forEach((bone, i) => {
       const el = this.spots[i];
       if (!bone || !el) return;
@@ -167,9 +169,12 @@ export default {
       }
       v3.project(cam);
       const sx = (v3.x * 0.5 + 0.5) * w, sy = (-v3.y * 0.5 + 0.5) * h;
-      const left = sx < w * 0.5 + x * 40;
+      const ew = el.offsetWidth;
+      let left = sx < w * 0.5 + x * 40;
+      if (left && sx - ew + 18 < formRight + 12) left = false;
+      if (!left && sx + ew - 9 > w - 20) left = true;
       el.classList.toggle('flip', left);
-      const offX = left ? -el.offsetWidth + 18 : -9;
+      const offX = left ? -ew + 18 : -9;
       el.style.transform = `translate(${sx + offX}px, ${sy - 15}px)`;
       el.style.setProperty('--vis', v3.z < 1 ? 1 : 0);
     });

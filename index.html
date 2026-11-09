@@ -15,32 +15,56 @@
     content="Portfolio of Hritabrata Bardhan - C++ Systems, Linux Architecture, Algorithms & Full-Stack Development.">
   <meta property="og:type" content="website">
   <title>Hritabrata Bardhan | Software Developer</title>
+  <!-- Editorial serifs for the intro + contact (Newsreader for headlines, Instrument Serif for italic accents) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./src/styles.css">
 </head>
 
 <body class="is-gated">
 
-  <!-- ============ SOUND GATE (asked on every visit) ============ -->
+  <!-- ============ INTRO / LOADER — count to 100, then press & hold to enter ============ -->
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-    <div class="gate-inner">
-      <p class="gate-kicker">FzAlpha presents</p>
-      <h1 class="gate-title" id="gate-title">From Silicon<br>to Soul</h1>
-      <p class="gate-lead">This portfolio plays like a short film.<br>Would you like to enable sound?</p>
-      <div class="gate-actions">
-        <button class="btn btn-primary" id="gate-sound" data-sound="on">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-          Enter with sound
-        </button>
-        <button class="btn btn-ghost" id="gate-silent" data-sound="off">Enter in silence</button>
+    <div class="gate-top">
+      <span class="gate-brand">FzAlpha</span>
+      <span class="gate-label" id="gate-label">Loading the film</span>
+    </div>
+
+    <div class="gate-center">
+      <div class="gate-count" aria-hidden="true"><span id="gate-count">00</span></div>
+      <button class="hold" id="gate-hold" type="button" disabled aria-label="Press and hold to enter with sound">
+        <svg class="hold-ring" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" class="hold-ring-bg" />
+          <circle cx="50" cy="50" r="46" class="hold-ring-fill" id="gate-ring" />
+        </svg>
+        <span class="hold-label">Hold</span>
+      </button>
+    </div>
+
+    <div class="gate-bottom">
+      <div class="gate-heading">
+        <p class="gate-kicker">A film by Hritabrata Bardhan</p>
+        <h1 class="gate-title" id="gate-title" data-split>Every system begins with <em>a single line.</em></h1>
       </div>
-      <p class="gate-hint">Best with headphones · You can change this any time</p>
-      <div class="gate-load" aria-live="polite"><span class="gate-load-bar" id="gate-load-bar"></span></div>
+      <div class="gate-side">
+        <p class="gate-hint" id="gate-hint">This portfolio plays like a short film</p>
+        <button class="gate-silent" id="gate-silent" type="button">Enter in silence</button>
+      </div>
+      <div class="gate-load" aria-hidden="true"><span class="gate-load-bar" id="gate-load-bar"></span></div>
     </div>
   </div>
+
+  <!-- Thin corner marks framing the screen -->
+  <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
   <!-- ============ CINEMATIC LAYERS ============ -->
   <canvas id="stage" class="stage" aria-hidden="true"></canvas>
   <div class="still-layer" id="still-layer" aria-hidden="true"></div>
+  <!-- Opening film: pre-rendered in Blender (blender/intro_film.blend), crossfades into the live scene -->
+  <div class="film" id="film" aria-hidden="true">
+    <video id="film-video" muted playsinline preload="auto" disablepictureinpicture></video>
+  </div>
   <div class="scene-wait" id="scene-wait" aria-live="polite"><span class="scene-wait-ring"></span><span id="scene-wait-text">Loading scene</span></div>
   <div class="letterbox" aria-hidden="true"><span class="lb lb-top"></span><span class="lb lb-bottom"></span></div>
   <div class="boot" id="boot" aria-hidden="true"><pre id="boot-log"></pre></div>
@@ -105,7 +129,8 @@
       <div class="act-sticky">
         <div class="hero-copy">
           <p class="hero-greeting">Hi, I'm</p>
-          <h1 class="hero-name"><span>Hritabrata</span> <span>Bardhan</span></h1>
+          <h1 class="hero-name" data-split>Hritabrata <em>Bardhan.</em></h1>
+          <p class="hero-tagline" data-split>I build software <em>close to the metal.</em></p>
           <p class="hero-role" aria-live="polite">
             <span id="typed-text">Software Developer</span><span class="typing-cursor" id="typing-cursor">|</span>
           </p>
@@ -298,10 +323,25 @@
     <!-- ============ FINALE — CONTACT — Astraía's six hands ============ -->
     <section class="act act-contact" id="contact" data-act="contact">
       <div class="act-sticky">
-        <div class="act-head contact-head" data-reveal="0.04-0.98">
-          <span class="act-kicker">Finale — Six Hands</span>
-          <h2 class="act-title">Have a Project?<br>Let's Talk.</h2>
-          <p class="contact-lead">Feel free to reach out for software engineering opportunities, low-level systems collaboration, or algorithmic discussions.</p>
+        <div class="contact-block">
+          <div class="contact-head" data-reveal="0.04-0.98">
+            <p class="contact-kicker">V / Contact</p>
+            <h2 class="contact-title" data-split>Let's make something <em>worth scrolling.</em></h2>
+          </div>
+
+          <div class="cform" data-reveal="0.12-0.98">
+            <form id="contact-form" novalidate>
+              <label class="cfield"><span>Name</span><input id="c-name" name="name" required autocomplete="name"></label>
+              <label class="cfield"><span>Email</span><input id="c-email" name="email" type="email" required autocomplete="email"></label>
+              <label class="cfield"><span>Project</span><textarea id="c-msg" name="message" rows="2" placeholder="Tell me a little about it"></textarea></label>
+              <button type="submit" class="cbtn">Send message<span aria-hidden="true">→</span></button>
+            </form>
+            <div class="cform-done" role="status">
+              <p class="cform-status"></p>
+              <p class="cform-note">Your email app opened with the message — just hit send.</p>
+              <button type="button" class="cform-again">Write another ↺</button>
+            </div>
+          </div>
         </div>
 
         <!-- Hotspots pinned to Astraía's six hands (positioned by JS) -->
@@ -314,14 +354,13 @@
           <button class="hotspot" data-hand="5" data-open="message" type="button"><span class="orb"></span><span class="hs-label">Send a Message</span></button>
         </div>
 
-        <!-- Plain list: shown on small screens and for screen readers -->
-        <ul class="contact-list glass" data-reveal="0.3-0.98">
-          <li><span>Email</span><a href="mailto:hritabratabardhan13579@gmail.com">hritabratabardhan13579@gmail.com</a><button class="copy-btn" data-copy="hritabratabardhan13579@gmail.com">Copy</button></li>
-          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/hritabrata-bardhan-12b498365/" target="_blank" rel="noopener noreferrer">Hritabrata Bardhan ↗</a></li>
-          <li><span>Discord</span><em>fz_alpha_1</em><button class="copy-btn" data-copy="fz_alpha_1">Copy</button></li>
-          <li><span>GitHub</span><a href="https://github.com/FzAlpha" target="_blank" rel="noopener noreferrer">github.com/FzAlpha ↗</a></li>
-          <li><span>LeetCode</span><a href="https://leetcode.com/u/Fz_Alpha_07/" target="_blank" rel="noopener noreferrer">Fz_Alpha_07 ↗</a></li>
-          <li><span>Message</span><button class="btn btn-primary btn-sm" data-open="message">Send a Message</button></li>
+        <!-- Quick links: shown on small screens, where the hands are too small to tap -->
+        <ul class="contact-chips" data-reveal="0.12-0.98">
+          <li><a href="mailto:hritabratabardhan13579@gmail.com">Email</a></li>
+          <li><a href="https://www.linkedin.com/in/hritabrata-bardhan-12b498365/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+          <li><a href="https://github.com/FzAlpha" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+          <li><a href="https://leetcode.com/u/Fz_Alpha_07/" target="_blank" rel="noopener noreferrer">LeetCode ↗</a></li>
+          <li><button type="button" data-copy="fz_alpha_1">Discord · copy</button></li>
         </ul>
       </div>
     </section>
@@ -413,25 +452,6 @@
         <button class="btn btn-ghost" id="print-cv-btn">Print / Save PDF</button>
         <a href="https://github.com/FzAlpha" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit GitHub</a>
       </div>
-    </div>
-  </div>
-
-  <!-- ============ MESSAGE MODAL (6th hand) ============ -->
-  <div class="modal" id="message-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="msg-title">
-    <div class="modal-box glass">
-      <div class="modal-head">
-        <div>
-          <h3 id="msg-title">Send a Message</h3>
-          <span class="modal-sub">Opens in your email app</span>
-        </div>
-        <button class="modal-close" data-close aria-label="Close">&times;</button>
-      </div>
-      <form id="contact-form" class="form" novalidate>
-        <label class="field"><span>Name</span><input type="text" id="c-name" name="name" placeholder="Your Name" required></label>
-        <label class="field"><span>Email</span><input type="email" id="c-email" name="email" placeholder="your.email@example.com" required></label>
-        <label class="field"><span>Message</span><textarea id="c-msg" name="message" rows="4" placeholder="Your message here..." required></textarea></label>
-        <button type="submit" class="btn btn-primary">Send Message</button>
-      </form>
     </div>
   </div>
 

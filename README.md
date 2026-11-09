@@ -30,6 +30,16 @@ npm run preview   # serve the built site
 - **Models** — originals live in `modelss/` (not committed). `npm run models` recompresses them into `public/models/hd` and `public/models/sd`.
 - **Room** — `node scripts/convert-room.mjs` turns the Hotel Room HDRI (`modelss/model 11`) into the night-graded panorama `public/env/room-night.webp`.
 
+## Opening film (Blender)
+
+After "Hold", a 13 s pre-rendered film plays, then crossfades into the live WebGL hero (its last frame matches the hero's opening camera). If the video can't load, the real-time intro plays instead.
+
+- Scene: `blender/intro_film.blend` (Blender 4.2, EEVEE): Queen of Swords + wings, volumetric god rays, black-water floor, feather rain / burst and dust particles (baked), four cameras cut with timeline markers (macro → low orbit → push-in → flash & pull-back).
+- Render: `blender -b blender/intro_film.blend -a` → `blender/frames/` (≈4 s/frame on an RTX 4060).
+- Encode: `blender -b -P blender/encode_film.py` → `public/film/intro-1080.mp4` and `intro-720.mp4`.
+- Phones (portrait): `blender/intro_film_vertical.blend` is the same film re-framed for 9:16, ending on the phone hero framing. Render with `blender -b blender/intro_film_vertical.blend -a` → `blender/frames_v/`, encode with `blender -b -P blender/encode_film.py -- vertical` → `public/film/intro-portrait.mp4`.
+- Sound and title cues follow the film's clock — timings live in `FILM` in `src/ui/film.js`.
+
 ## Dev helpers (dev server only)
 
 - `?skip&act=skills&p=0.5` — enter silently, skip the intro, jump to an act at a scroll position (0–1).

@@ -3,3 +3,9 @@ dist/
 # Original uncompressed models (490 MB, one file >100 MB). Kept on disk, not in git.
 modelss/
 .DS_Store
+
+# Blender film render output (re-create with: blender -b blender/intro_film.blend -a)
+blender/frames/
+blender/frames_v/
+blender/render*.log
+*.blend1

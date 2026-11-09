@@ -9,6 +9,7 @@ export class UI {
     this.bootLog = $('#boot-log');
     this.heroCopyEl = $('.hero-copy');
     this.scrollCue = $('.scroll-cue');
+    this.#split();
     this.#nav();
     this.#modals();
     this.#copy();
@@ -76,8 +77,6 @@ export class UI {
     const pct = Math.round((loaded / total) * 100);
     $('#reel-label').textContent = pct >= 100 ? 'Reel loaded' : `Reel ${pct}%`;
     $('#reel').classList.toggle('is-done', pct >= 100);
-    const bar = $('#gate-load-bar');
-    if (bar) bar.style.width = `${Math.min(100, pct * 4)}%`;
   }
 
   soundButton(on) {
@@ -112,6 +111,27 @@ export class UI {
   }
 
   // ------------------------------------------------------------ internals
+  /**
+   * Wrap every word of [data-split] headings in a clipping span so the words can slide up
+   * one after another. Words inside <em> keep the italic accent style.
+   */
+  #split() {
+    const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    $$('[data-split]').forEach((el) => {
+      let i = 0;
+      const wrap = (text, em) => text.split(/(\s+)/).map((w) => {
+        if (!w) return '';
+        if (/^\s+$/.test(w)) return ' ';
+        const inner = em ? `<em>${esc(w)}</em>` : esc(w);
+        return `<span class="w"><span class="w-in" style="--i:${i++}">${inner}</span></span>`;
+      }).join('');
+      el.innerHTML = [...el.childNodes].map((n) => {
+        if (n.nodeName === 'BR') return '<br>';
+        return wrap(n.textContent, n.nodeName === 'EM');
+      }).join('');
+    });
+  }
+
   #nav() {
     const toggle = $('#mobile-toggle'), drawer = $('#mobile-drawer');
     const set = (open) => {
@@ -138,9 +158,15 @@ export class UI {
   #modals() {
     const open = (m) => { m.classList.add('is-open'); m.setAttribute('aria-hidden', 'false'); document.body.classList.add('scroll-locked'); m.querySelector('input, button')?.focus(); };
     const close = (m) => { m.classList.remove('is-open'); m.setAttribute('aria-hidden', 'true'); document.body.classList.remove('scroll-locked'); };
-    const cv = $('#resume-modal'), msg = $('#message-modal');
+    const cv = $('#resume-modal');
     ['#open-resume-btn', '#hero-resume-trigger', '#drawer-resume-btn'].forEach((s) => $(s)?.addEventListener('click', () => { this.closeDrawer?.(); open(cv); }));
-    $$('[data-open="message"]').forEach((b) => b.addEventListener('click', () => open(msg)));
+    // "Send a Message" (Astraía's 6th hand) jumps to the form beside her.
+    $$('[data-open="message"]').forEach((b) => b.addEventListener('click', () => {
+      const name = $('#c-name');
+      name?.focus({ preventScroll: true });
+      name?.closest('.cform')?.classList.add('is-pulse');
+      setTimeout(() => name?.closest('.cform')?.classList.remove('is-pulse'), 900);
+    }));
     $$('.modal').forEach((m) => {
       m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) close(m); });
     });
@@ -163,15 +189,23 @@ export class UI {
 
   #form() {
     const form = $('#contact-form');
+    const box = form.closest('.cform');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!form.reportValidity()) return;
       const name = $('#c-name').value.trim(), email = $('#c-email').value.trim(), msg = $('#c-msg').value.trim();
-      if (!name || !email || !msg) { this.toast('Please complete all required fields.'); return; }
-      this.toast(`Thanks ${name}! Preparing email message...`);
-      const mailto = `mailto:hritabratabardhan13579@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${msg}`)}`;
-      window.location.href = mailto;
+      // No backend: the message opens, ready to send, in the visitor's email app.
+      const subject = `Project inquiry from ${name}`;
+      const body = `From: ${name} (${email})\n\n${msg || '(no details yet)'}`;
+      window.location.href = `mailto:hritabratabardhan13579@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      this.audio.sparkle(1.2);
+      box.querySelector('.cform-status').textContent = "Thanks! I'll be in touch soon.";
+      box.classList.add('is-sent');
       form.reset();
-      this.closeModal('#message-modal');
+    });
+    box.querySelector('.cform-again').addEventListener('click', () => {
+      box.classList.remove('is-sent');
+      $('#c-name').focus({ preventScroll: true });
     });
   }
 
@@ -195,7 +229,7 @@ export class UI {
   #hoverTicks() {
     let last = 0;
     document.addEventListener('pointerover', (e) => {
-      const t = e.target.closest('.btn, .nav-item, .pill-btn, .hero-socials a, .btn-link, .copy-btn');
+      const t = e.target.closest('.btn, .nav-item, .pill-btn, .hero-socials a, .btn-link, .copy-btn, .cbtn, .contact-chips a, .gate-silent');
       if (!t || performance.now() - last < 60) return;
       last = performance.now();
       this.audio.tick();

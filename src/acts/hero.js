@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { fitModel } from '../engine/assets.js';
 import { FeatherStorm } from './feathers.js';
 import { lerp, smooth, track } from './util.js';
+import { FILM } from '../ui/film.js';
 
 const BOOT_LINES = [
   ['dim', '[    0.000000] Linux version 6.x-fzalpha (gcc) #1 SMP PREEMPT'],
@@ -117,6 +118,8 @@ export default {
     this.introT = 0;
     this.introDone = false;
     this.cues = new Set();
+    // The pre-rendered Blender film is used when it has buffered; otherwise the real-time intro.
+    this.filmMode = !!ctx.film?.playable;
     document.body.classList.add('is-intro');
     ui.letterbox(true);
     return new Promise((resolve) => {
@@ -124,6 +127,7 @@ export default {
         if (this.introDone) return;
         this.introDone = true;
         this.introT = -1;
+        ctx.film?.stop();
         ui.boot(false);
         ui.titleCard(false);
         ui.letterbox(false);
@@ -146,10 +150,60 @@ export default {
 
   _cue(name, fn) { if (!this.cues.has(name)) { this.cues.add(name); fn(); } },
 
+  /**
+   * Film intro: boot log, then the Blender film plays over the live scene. The live scene
+   * waits underneath at the hero's opening frame, so the crossfade lands on the same shot.
+   */
+  filmIntro(dt, ctx) {
+    const { stage, ui, audio, film } = ctx;
+    const t = this.introT;
+    const g = stage.grade.uniforms;
+    g.uFade.value = 0;
+    g.uFlash.value = 0;
+    stage.lights.rim.intensity = 4.5;
+    this.glow.material.opacity = 0.3;
+    this._restShot(stage);
+    if (t < 2.3) stage.cut();
+
+    if (t > 2.2) this._cue('film', () => {
+      ui.boot(false);
+      audio.play('glitch', { volume: 0.35 });
+      audio.mix({ epic: 0.38, calm: 0 }, 3);
+      const riser = audio.buffers?.get('riser')?.duration || 3;
+      film.cues = [];
+      film.at(0.15, () => audio.play('wings', { volume: 0.45 }));
+      film.at(FILM.cutOrbit, () => audio.play('wings', { volume: 0.7, rate: 0.9 }));
+      film.at(Math.max(FILM.cutPush - 0.5, FILM.flash - riser), () => audio.play('riser', { volume: 0.6 }));
+      film.at(FILM.flash, () => {
+        audio.play('impact', { volume: 0.95, duck: 0.45 });
+        audio.mix({ epic: 0.55, calm: 0 }, 3);
+        ui.titleCard(true);
+      });
+      film.at(FILM.handoff, () => {
+        film.fadeOut();
+        this.feathers.burst(new THREE.Vector3(0, 2.2, 0), 4); // the live feathers carry on the film's burst
+      });
+      film.play().then(() => this.finishIntro?.());
+    });
+    this._animate(dt, ctx);
+  },
+
+  /** The hero's resting camera (same as update() at p = 0). */
+  _restShot(stage) {
+    const portrait = stage.isPortrait;
+    const x = portrait ? 0 : -2.3;
+    this._rp ||= new THREE.Vector3();
+    this._rl ||= new THREE.Vector3();
+    this._rp.set(x, portrait ? 1.0 : 1.9, portrait ? 14 : 9.2);
+    this._rl.set(x, portrait ? 0.4 : 1.95, 0);
+    stage.shot(this._rp, this._rl, 35);
+  },
+
   /** Intro timeline, driven by real time. */
   intro(dt, ctx) {
     const { stage, ui, audio } = ctx;
     this.introT += dt;
+    if (this.filmMode) return this.filmIntro(dt, ctx);
     const t = this.introT;
     const g = stage.grade.uniforms;
 
