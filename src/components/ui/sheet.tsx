@@ -47,6 +47,7 @@ function SheetContent({
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
+        data-lenis-prevent
         className={cn(
           'fixed z-50 flex flex-col gap-4 bg-popover text-popover-foreground shadow-2xl ease-out-expo data-[state=open]:animate-in data-[state=open]:duration-500 data-[state=closed]:animate-out data-[state=closed]:duration-300',
           sides[side],

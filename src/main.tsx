@@ -10,6 +10,9 @@ import './index.css';
 import { App } from './App';
 import { ThemeProvider } from '@/lib/theme';
 
+// Tells the index.html safety timer that the app booted, so reveal-hidden content stays hidden for the animations.
+(window as Window & { __motionReady?: boolean }).__motionReady = true;
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>

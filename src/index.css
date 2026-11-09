@@ -182,6 +182,67 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   Motion — initial states for reveal animations (src/lib/animations.ts).
+   Only applied when html.js-anim is set (JS on, no reduced motion).
+   ------------------------------------------------------------------ */
+.js-anim [data-split],
+.js-anim [data-scrub-words],
+.js-anim [data-scramble] {
+  visibility: hidden;
+}
+.js-anim [data-stagger] > * {
+  opacity: 0;
+}
+.js-anim [data-hero-line] {
+  transform: translateY(110%);
+}
+.js-anim [data-hero-fade] {
+  opacity: 0;
+}
+/* Line masks created by SplitType; padding keeps descenders from being clipped. */
+.split-line {
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.split-word,
+.scrub-word {
+  will-change: transform, opacity;
+}
+html.is-loading,
+html.is-loading body {
+  overflow: hidden;
+}
+.ukiyo-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+/* Printing from the CV sheet prints only the CV. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-cv,
+  .print-cv * {
+    visibility: visible;
+  }
+  .print-cv {
+    position: absolute !important;
+    inset: 0 !important;
+    max-width: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  .print-cv .no-print,
+  .print-cv [data-slot='sheet-close'],
+  .print-cv > button {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
