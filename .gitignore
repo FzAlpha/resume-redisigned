@@ -1,4 +1,5 @@
 node_modules/
+*.tsbuildinfo
 dist/
 # Original uncompressed models (490 MB, one file >100 MB). Kept on disk, not in git.
 modelss/

@@ -1,0 +1,64 @@
+// TODO(content): add a cover image / GIF and year for each project; repo link for the AI platform.
+
+export type Project = {
+  slug: string;
+  title: string;
+  category: string;
+  summary: string;
+  tags: string[];
+  href: string;
+  linkLabel: string;
+  year: string | null;
+  cover: string | null;
+};
+
+export const projects: Project[] = [
+  {
+    slug: 'log-manager',
+    title: 'log-Manager',
+    category: 'C++ Systems',
+    summary:
+      'A local state-management tool that streamlines competitive-programming workflows and tracks DSA milestones with automated logging and telemetry snapshots.',
+    tags: ['C++', 'State machines', 'CLI', 'Telemetry'],
+    href: 'https://github.com/FzAlpha/log-Manager',
+    linkLabel: 'View repository',
+    year: null,
+    cover: null,
+  },
+  {
+    slug: 'custom-linux-shell',
+    title: 'Custom Linux Shell',
+    category: 'OS Internals',
+    summary:
+      'A standalone C++ terminal implementing process management, multi-stage piping, background jobs, job control, signal handling and core POSIX syscalls.',
+    tags: ['C++', 'POSIX', 'fork / exec', 'Signals'],
+    href: 'https://github.com/FzAlpha/custom-linux-shell',
+    linkLabel: 'View repository',
+    year: null,
+    cover: null,
+  },
+  {
+    slug: 'algo-vault',
+    title: 'Algo-Vault',
+    category: 'Algorithms',
+    summary:
+      '200+ verified solutions spanning dynamic programming, graph algorithms (Dijkstra, Tarjan), segment trees and binary-search optimization.',
+    tags: ['C++', 'Graph theory', 'Dynamic programming', 'Competitive'],
+    href: 'https://github.com/FzAlpha/algo-vault',
+    linkLabel: 'View repository',
+    year: null,
+    cover: null,
+  },
+  {
+    slug: 'multi-agent-platform',
+    title: 'Multi-Agent AI Platform',
+    category: 'Autonomous AI',
+    summary:
+      'An orchestration architecture for parallel workflow automation, self-hosted API dispatching and developer task pipelines run by cooperating agents.',
+    tags: ['Python', 'Agentic AI', 'Docker', 'Pipelines'],
+    href: 'https://github.com/FzAlpha',
+    linkLabel: 'Explore on GitHub',
+    year: null,
+    cover: null,
+  },
+];
