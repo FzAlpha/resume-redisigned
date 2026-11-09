@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 
+import { LiquidLens } from '@/components/interaction/LiquidLens';
 import { profile } from '@/content/profile';
 import { quips } from '@/content/quips';
 import { useLocalTime } from '@/lib/hooks';
@@ -26,13 +27,7 @@ export function Hero() {
           // y: 0 clears the CSS pre-state (translateY(110%)), which GSAP would otherwise keep as a px offset.
           .fromTo('[data-hero-line]', { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: 1.25, ease: ease.out, stagger: 0.09 })
           .fromTo('[data-hero-fade]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9, ease: ease.out, stagger: 0.06 }, 0.35);
-
-        // On the way out, the name drifts up a little slower than the page.
-        gsap.to('[data-hero-name]', {
-          yPercent: -12,
-          ease: 'none',
-          scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true },
-        });
+        // (No scroll parallax on the name: the liquid-glass lens caches a capture of it.)
       }, el);
     });
     return () => {
@@ -49,7 +44,14 @@ export function Hero() {
   ];
 
   return (
-    <section ref={root} id="top" className="container-x flex min-h-svh flex-col justify-end pt-28 pb-[clamp(1.5rem,4vw,3rem)]">
+    <section
+      ref={root}
+      id="top"
+      className="container-x relative isolate flex min-h-svh flex-col justify-end pt-28 pb-[clamp(1.5rem,4vw,3rem)]"
+    >
+      {/* Background as a real child: the glass lens refracts the section's children, never the section itself. */}
+      <div aria-hidden className="absolute inset-0 -z-10 bg-background" />
+      <LiquidLens className="top-[38%] right-[12%]" />
       <p data-hero-fade className="font-mono text-xs text-muted-foreground">
         <span className="text-signal">●</span> {quips.hero}
       </p>

@@ -13,12 +13,14 @@ export const getLenis = () => lenis;
 export function scrollToId(id: string, { immediate = false } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
-  if (lenis) lenis.scrollTo(el, { immediate, duration: 1.4 });
+  // force: programmatic scrolls are deliberate navigation, so they go through even while
+  // Lenis is paused (e.g. a dialog is still finishing its exit animation).
+  if (lenis) lenis.scrollTo(el, { immediate, duration: 1.4, force: true });
   else el.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth', block: 'start' });
 }
 
 export function scrollToTop({ immediate = false } = {}) {
-  if (lenis) lenis.scrollTo(0, { immediate, duration: 1.6 });
+  if (lenis) lenis.scrollTo(0, { immediate, duration: 1.6, force: true });
   else window.scrollTo({ top: 0, behavior: immediate ? 'auto' : 'smooth' });
 }
 

@@ -3,6 +3,7 @@ import { ArrowUpRight, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { SectionHeader } from '@/components/site/SectionHeader';
+import { Magnetic } from '@/components/interaction/Magnetic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,12 +51,16 @@ export function Contact() {
       <p className="mt-6 font-mono text-sm text-muted-foreground">{quips.contact.line}</p>
 
       <div data-stagger className="mt-[clamp(2.5rem,5vw,4rem)] flex flex-wrap items-center gap-3">
-        <Button size="lg" asChild>
-          <a href={`mailto:${email}`}>Email me</a>
-        </Button>
-        <Button size="lg" variant="outline" onClick={() => copy(email)}>
-          <Copy /> Copy address
-        </Button>
+        <Magnetic>
+          <Button size="lg" asChild>
+            <a href={`mailto:${email}`}>Email me</a>
+          </Button>
+        </Magnetic>
+        <Magnetic>
+          <Button size="lg" variant="outline" onClick={() => copy(email)}>
+            <Copy /> Copy address
+          </Button>
+        </Magnetic>
       </div>
 
       <div className="mt-[clamp(4rem,8vw,7rem)] grid gap-16 md:grid-cols-12 md:gap-6">

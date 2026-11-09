@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Nav } from '@/components/site/Nav';
 import { Footer } from '@/components/site/Footer';
 import { ProjectCover } from '@/components/site/ProjectCover';
+import { TiltCover } from '@/components/interaction/TiltCover';
 import { TLink } from '@/components/motion/RouteTransition';
 import { usePageAnimations } from '@/components/motion/usePageAnimations';
 import { projects } from '@/content/projects';
@@ -59,7 +60,9 @@ function CaseStudy({ index }: { index: number }) {
         </header>
 
         <div data-stagger className="mt-[clamp(2.5rem,6vw,5rem)]">
-          <ProjectCover project={project} index={index} className="aspect-[16/10] md:aspect-[16/8]" />
+          <TiltCover className="aspect-[16/10] md:aspect-[16/8]">
+            <ProjectCover project={project} index={index} className="size-full" />
+          </TiltCover>
         </div>
 
         <div className="mt-[clamp(3rem,6vw,5rem)] grid gap-12 md:grid-cols-12 md:gap-6">

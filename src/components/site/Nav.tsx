@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { TLink, useRouteTransition } from '@/components/motion/RouteTransition';
-import { scrollToId } from '@/lib/scroll';
-
+import { Magnetic } from '@/components/interaction/Magnetic';
+import { ScrambleText } from '@/components/interaction/ScrambleText';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useCv } from '@/lib/cv';
 import { useActiveSection } from '@/lib/hooks';
+import { isMac, usePalette } from '@/lib/palette';
+import { scrollToId } from '@/lib/scroll';
 import { cn } from '@/lib/utils';
 
 export const navLinks = [
@@ -25,16 +27,13 @@ export function Nav() {
   const onHome = pathname === '/';
   const active = useActiveSection(onHome ? sectionIds : noSections);
   const { setOpen: openCv } = useCv();
+  const { setOpen: openPalette } = usePalette();
   const [menuOpen, setMenuOpen] = useState(false);
   const go = useRouteTransition();
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-[var(--gutter)] pt-4">
-      {/* Glass pill — phase 6 swaps the backdrop for WebGL liquid glass */}
-      <nav
-        aria-label="Main"
-        className="pointer-events-auto flex h-12 w-full max-w-[38rem] items-center justify-between gap-2 rounded-full border border-foreground/10 bg-background/70 pr-1.5 pl-5 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.25)] backdrop-blur-xl backdrop-saturate-150"
-      >
+      <nav aria-label="Main" className="glass pointer-events-auto flex h-12 w-full max-w-[42rem] items-center justify-between gap-2 rounded-full pr-1.5 pl-5">
         <TLink to="/" label="Index" className="font-mono text-sm font-medium tracking-tight" aria-label="Hritabrata Bardhan — home">
           HB
         </TLink>
@@ -55,21 +54,31 @@ export function Nav() {
                   aria-hidden
                   className={cn('size-1 rounded-full bg-signal transition-opacity duration-200', active === link.id ? 'opacity-100' : 'opacity-0')}
                 />
-                {link.label}
+                <ScrambleText>{link.label}</ScrambleText>
               </TLink>
             </li>
           ))}
         </ul>
 
         <div className="flex items-center gap-1">
-          <ThemeToggle />
           <button
             type="button"
-            onClick={() => openCv(true)}
-            className="hidden h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-85 md:inline-flex"
+            onClick={() => openPalette(true)}
+            aria-label="Open command palette"
+            className="hidden h-8 items-center gap-1 rounded-full border border-foreground/10 px-2.5 font-mono text-[0.7rem] text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground sm:inline-flex"
           >
-            CV
+            {isMac() ? '⌘' : 'Ctrl'} K
           </button>
+          <ThemeToggle />
+          <Magnetic strength={0.25} className="hidden md:inline-flex">
+            <button
+              type="button"
+              onClick={() => openCv(true)}
+              className="border-beam inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background"
+            >
+              CV
+            </button>
+          </Magnetic>
 
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
@@ -104,16 +113,28 @@ export function Nav() {
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
-                onClick={() => {
-                  setMenuOpen(false);
-                  openCv(true);
-                }}
-                className="mt-6 h-12 w-full rounded-full bg-foreground text-sm font-medium text-background"
-              >
-                View CV
-              </button>
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    openCv(true);
+                  }}
+                  className="h-12 rounded-full bg-foreground text-sm font-medium text-background"
+                >
+                  View CV
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    window.setTimeout(() => openPalette(true), 380);
+                  }}
+                  className="h-12 rounded-full border border-foreground/15 font-mono text-sm"
+                >
+                  &gt;_ Terminal
+                </button>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

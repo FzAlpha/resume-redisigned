@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import { useDrag } from '@use-gesture/react';
 import { Printer } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -20,10 +22,39 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 export function CvSheet() {
   const { open, setOpen } = useCv();
   const { name, education } = profile;
+  const panel = useRef<HTMLDivElement>(null);
+
+  // Swipe right to dismiss (touch / pen). Uses the `translate` property so it composes
+  // with the enter/exit animations, which run on `transform`.
+  const bind = useDrag(
+    ({ movement: [mx], velocity: [vx], direction: [dx], last, event, cancel }) => {
+      const el = panel.current;
+      if (!el) return;
+      if ((event as PointerEvent).pointerType === 'mouse') return cancel();
+      const x = Math.max(0, mx);
+      if (!last) {
+        el.style.transition = 'none';
+        el.style.translate = `${x}px 0`;
+        return;
+      }
+      el.style.transition = 'translate 450ms cubic-bezier(.16,1,.3,1)';
+      if (x > 120 || (vx > 0.5 && dx > 0)) {
+        setOpen(false);
+      } else {
+        el.style.translate = '0px 0';
+      }
+    },
+    { axis: 'x', filterTaps: true },
+  );
+
+  useEffect(() => {
+    if (open && panel.current) panel.current.style.translate = '0px 0';
+  }, [open]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent side="right" className="print-cv gap-0 overflow-y-auto">
+      <SheetContent ref={panel} {...bind()} side="right" className="print-cv touch-pan-y gap-0 overflow-y-auto">
+        <div aria-hidden className="absolute top-1/2 left-1.5 h-12 w-1 -translate-y-1/2 rounded-full bg-foreground/15 sm:hidden" />
         <SheetHeader className="pb-5">
           <SheetTitle className="text-2xl">
             {name.first} {name.last}

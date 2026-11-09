@@ -1,11 +1,15 @@
+import { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 import { TLink } from '@/components/motion/RouteTransition';
+import { WorkPreview } from '@/components/interaction/WorkPreview';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { projects } from '@/content/projects';
 import { quips } from '@/content/quips';
 
 export function SelectedWork() {
+  const listRef = useRef<HTMLOListElement>(null);
+
   return (
     <section id="work" className="container-x scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
       <SectionHeader index="03" label="Selected work" aside={`${String(projects.length).padStart(2, '0')} projects`} />
@@ -16,10 +20,16 @@ export function SelectedWork() {
         <p className="max-w-xs font-mono text-xs text-muted-foreground md:text-right">{quips.work}</p>
       </div>
 
-      <ol data-stagger className="mt-[clamp(3rem,6vw,5rem)]">
+      <ol ref={listRef} data-stagger className="group/list mt-[clamp(3rem,6vw,5rem)]">
         {projects.map((p, i) => (
           <li key={p.slug} className="border-t last:border-b">
-            <TLink to={`/work/${p.slug}`} label={p.title} className="group grid grid-cols-12 items-baseline gap-x-4 gap-y-2 py-6 md:py-9">
+            <TLink
+              to={`/work/${p.slug}`}
+              label={p.title}
+              data-preview={i}
+              data-cursor="View"
+              className="group grid grid-cols-12 items-baseline gap-x-4 gap-y-2 py-6 transition-opacity duration-500 md:py-9 md:group-hover/list:opacity-40 md:hover:opacity-100!"
+            >
               <span className="col-span-2 font-mono text-sm text-muted-foreground tabular-nums md:col-span-1">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -40,6 +50,7 @@ export function SelectedWork() {
           </li>
         ))}
       </ol>
+      <WorkPreview listRef={listRef} />
     </section>
   );
 }
