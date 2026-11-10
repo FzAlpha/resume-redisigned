@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef, type RefObject } from 'react';
 
 import { createLiquidGlass, type LiquidGlassOptions } from '@/vendor/liquid-glass/liquid-glass';
-import { useTheme } from '@/lib/theme';
 
 export { supportsRefraction } from '@/vendor/liquid-glass/liquid-glass';
 
@@ -16,7 +15,6 @@ type Glass = ReturnType<typeof createLiquidGlass>;
  */
 export function useLiquidGlass<T extends HTMLElement>(ref: RefObject<T | null>, options: LiquidGlassOptions, enabled = true) {
   const glass = useRef<Glass | null>(null);
-  const { theme } = useTheme();
 
   useLayoutEffect(() => {
     const host = ref.current;
@@ -30,13 +28,6 @@ export function useLiquidGlass<T extends HTMLElement>(ref: RefObject<T | null>, 
     // Options are read once at creation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
-
-  // Light/dark tuning switches in one step (animating it per frame flickers in Chromium).
-  useLayoutEffect(() => {
-    const host = ref.current;
-    if (!host) return;
-    host.toggleAttribute('data-lg-dark', theme === 'dark');
-  }, [theme, ref]);
 
   return glass;
 }

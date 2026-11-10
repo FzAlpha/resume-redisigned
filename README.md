@@ -43,7 +43,7 @@ src/
   components/site/         Nav, Footer, CV sheet, ⌘K palette, mobile menu, contribution grid…
   components/motion/       Lenis, preloader, route curtain, scroll progress, page-animation hook
   components/interaction/  cursor, magnetic, marquee, tilt cover, work preview, glass lens, hero background wrapper, Lottie tick
-  lib/                     motion tokens, scroll helpers, animation engine, theme, contexts
+  lib/                     motion tokens, scroll helpers, animation engine, colour journey, contexts
 scripts/                   fetch-activity.mjs, og-image.mjs
 ```
 
@@ -67,10 +67,10 @@ Scroll animations are declarative — add a data attribute and `src/lib/animatio
 ### Colour journey
 
 The background changes colour as you scroll (`src/lib/journey.ts`). Give a section `data-journey="lichen|fog"`
-and the page blends into that palette as the section arrives; palettes live in `journeys` with light and dark variants. Every
+and the page blends into that palette as the section arrives; palettes live in `journeys` (light only; there is no dark mode). Every
 token is mixed from five base colours, so the whole UI follows. Pinned sections hold their colour for the whole pin: the
 **Prologue** (`sections/Prologue.tsx`) pins on the hero's green and lights up its statement word by word before the page turns blue.
-Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`, faded out on dark paper.
+Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`.
 
 Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for
 emphasis; **Geist** for text; **Geist Mono** for labels.
@@ -78,7 +78,8 @@ emphasis; **Geist** for text; **Geist Mono** for labels.
 Hero: the background is React Bits' **Antigravity** (vendored in `src/vendor/react-bits/`, MIT + Commons Clause,
 configured in `components/interaction/HeroField.tsx`): particles gather into a circle around the cursor as it
 approaches and settle back when it leaves; click to burst. The tagline types itself out with a caret
-(`components/motion/TypedText.tsx`).
+(`components/motion/TypedText.tsx`), then hands over to React Bits' **Tech Text** (`components/interaction/TechTagline.tsx`):
+hover a letter for its dashed outline and type metrics, drag or flick it and it springs back (desktop, where the line fits on one line).
 
 Section-level effects: pinned horizontal scroll (`sections/Disciplines.tsx`), stacking cards (`sections/Stack.tsx`),
 hero exit (`sections/Hero.tsx`). Everything is skipped under `prefers-reduced-motion` — if you see no motion at all,
@@ -96,13 +97,15 @@ Add `?intro` to the URL to replay the preloader.
 
 `src/vendor/liquid-glass/` is [nordify/css-liquid-glass](https://github.com/nordify/css-liquid-glass) (MIT), vendored
 unmodified and wrapped by `components/interaction/useLiquidGlass.ts`. Used on the nav pill and the draggable hero lens.
+Inside the nav pill, the links are React Bits' **Pill Nav** (`src/vendor/react-bits/PillNav.tsx`) with its own surface off, so the
+liquid glass is the only glass: a green highlight glides between links, a dot marks the active section.
 Chromium refracts; Safari/Firefox get frosted glass. Never put `transform`, `opacity`, `filter`, `isolation`,
 `will-change` or `overflow:hidden` on a glass element or its ancestors.
 
 ## Libraries
 
 GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk ·
-css-liquid-glass (vendored) · React Bits Antigravity (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
+css-liquid-glass (vendored) · React Bits Antigravity + Tech Text + Pill Nav (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
 ## Deploy

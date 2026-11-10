@@ -2,17 +2,13 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 
 import { introDone } from '@/lib/intro';
 import { motionEnabled } from '@/lib/motion';
-import { useTheme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 
 // React Bits "Antigravity" (vendored, see src/vendor/react-bits). Lazy so it never weighs on first paint.
 const Antigravity = lazy(() => import('@/vendor/react-bits/Antigravity'));
 
-// Site palette: fog blue, lichen green, a touch of red. Dark theme gets the lighter variants.
-const colors = {
-  light: ['#2a5b8c', '#3d6b26', '#d7262e'],
-  dark: ['#8cb8e6', '#9fd17a', '#ff4d55'],
-};
+// Green only: three shades of the lichen accent, so the ring varies a little in tone.
+const colors = ['#3d6b26', '#5f8f3e', '#2c4f1b'];
 
 /**
  * Hero background: round particles (they stay circles, never stretch into pills) gather into a
@@ -20,7 +16,6 @@ const colors = {
  * reduced motion.
  */
 export function HeroField({ className }: { className?: string }) {
-  const { theme } = useTheme();
   const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -47,12 +42,12 @@ export function HeroField({ className }: { className?: string }) {
       {ready && (
         <Suspense fallback={null}>
           <Antigravity
-            colors={theme === 'dark' ? colors.dark : colors.light}
-            lightMode={theme !== 'dark'}
+            colors={colors}
+            lightMode
             count={1400}
             ringRadius={7}
             magnetRadius={10}
-            particleSize={0.9}
+            particleSize={0.45}
             waveAmplitude={0.35}
             waveCount={3}
             lerpSpeed={0.05}

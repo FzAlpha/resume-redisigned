@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useLocation } from 'react-router';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Copy, FileText, Hash, MoonStar, SquareTerminal } from 'lucide-react';
+import { ArrowUpRight, Copy, FileText, Hash, SquareTerminal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -24,7 +24,6 @@ import { useCv } from '@/lib/cv';
 import { toastSuccess } from '@/lib/celebrate';
 import { usePalette } from '@/lib/palette';
 import { scrollToId } from '@/lib/scroll';
-import { useTheme } from '@/lib/theme';
 
 type Entry = { id: number; cmd: string; lines: string[] };
 
@@ -32,7 +31,6 @@ type Entry = { id: number; cmd: string; lines: string[] };
 export function CommandPalette() {
   const { open, setOpen } = usePalette();
   const { setOpen: openCv } = useCv();
-  const { toggle: toggleTheme } = useTheme();
   const go = useRouteTransition();
   const { pathname } = useLocation();
   const [value, setValue] = useState('');
@@ -156,9 +154,6 @@ export function CommandPalette() {
           </CommandItem>
           <CommandItem value="open cv resume" onSelect={() => closeThen(() => openCv(true))}>
             <FileText /> Open CV
-          </CommandItem>
-          <CommandItem value="toggle theme dark light" onSelect={() => closeThen(toggleTheme)}>
-            <MoonStar /> Toggle theme
           </CommandItem>
         </CommandGroup>
 

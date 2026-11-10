@@ -1,40 +1,34 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
 /* ------------------------------------------------------------------
    Tokens — source of truth is DESIGN.md. Change them there first.
 
    Five base colours per surface (paper, ink, muted-ink, accent-ink, glow). Everything else
    is mixed from them, so when the scroll "journey" (src/lib/journey.ts) rewrites the five
    on <html>, cards, hairlines, inputs and popovers all follow.
-   .island-light / .dark re-apply a fixed palette inside a section (the inverse Contact island).
+   .island-dark applies a fixed dark palette inside one section (the inverse Contact island).
+   There is no dark mode: the site is light only.
    ------------------------------------------------------------------ */
-:root,
-.island-light {
+:root {
   --paper: #e4e8ec;
   --ink: #11161b;
   --muted-ink: #5c6670;
   --accent-ink: #2a5b8c; /* italic serif emphasis */
   --glow: #b4c7da; /* the soft light behind the page */
-  --glow-alpha: 1; /* 0 on dark paper: no gradients on black */
   --signal: #ff4f00; /* the one UI accent — focus, active, live states */
   --caret: #d7262e; /* the typing caret */
 }
-.dark {
+.island-dark {
   --paper: #0e151d;
   --ink: #e0e6ec;
   --muted-ink: #8792a0;
   --accent-ink: #8cb8e6;
-  --glow: #1d2e42;
-  --glow-alpha: 0;
   --caret: #ff4d55;
 }
 
 :root,
-.island-light,
-.dark {
+.island-dark {
   --hairline: color-mix(in oklab, var(--ink) 11%, transparent);
 
   /* shadcn semantic slots, mapped onto the palette */
@@ -177,9 +171,6 @@
     -moz-osx-font-smoothing: grayscale;
     color-scheme: light;
   }
-  html.dark {
-    color-scheme: dark;
-  }
   html {
     background-color: var(--background);
   }
@@ -307,9 +298,6 @@ html.is-loading body {
   --lg-s: 0.8;
   --lg-shadow: var(--ink);
 }
-.dark .nav-glass {
-  --lg-tint: color-mix(in oklab, var(--background) 45%, transparent);
-}
 
 /* Atmosphere (components/site/Atmosphere.tsx): glows + film grain behind everything. */
 .atmosphere-glow {
@@ -318,7 +306,7 @@ html.is-loading body {
   height: 80vmax;
   border-radius: 50%;
   background: radial-gradient(closest-side, var(--glow), transparent);
-  opacity: calc(0.55 * var(--glow-alpha));
+  opacity: 0.55;
   filter: blur(40px);
   transition: background 0.6s linear;
 }
@@ -330,7 +318,7 @@ html.is-loading body {
 .atmosphere-glow-b {
   bottom: -45vmax;
   left: -30vmax;
-  opacity: calc(0.35 * var(--glow-alpha));
+  opacity: 0.35;
   animation: drift-b 32s ease-in-out infinite alternate;
 }
 @keyframes drift-a {
@@ -408,6 +396,9 @@ html.has-cursor,
 html.has-cursor * {
   cursor: none;
 }
+html.has-cursor [data-techtext] > * {
+  cursor: none !important; /* Tech Text sets grab/pointer inline; the custom cursor handles it */
+}
 html.has-cursor input,
 html.has-cursor textarea,
 html.has-cursor [cmdk-input] {
@@ -415,15 +406,8 @@ html.has-cursor [cmdk-input] {
 }
 
 /* ------------------------------------------------------------------
-   View Transitions — html[data-vt] picks the style (RouteTransition.tsx, ThemeToggle.tsx)
+   View Transitions — html[data-vt] picks the style (RouteTransition.tsx)
    ------------------------------------------------------------------ */
-
-/* Theme switch: circular reveal from the toggle (the clip is animated from JS). */
-html[data-vt='theme']::view-transition-old(root),
-html[data-vt='theme']::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
 
 /* morph: the title flies from its list row into the case-study heading; the rest
    of the old page lifts away while the new one rises in underneath. */

@@ -41,13 +41,7 @@
       }
     </script>
     <script>
-      // Apply the theme before first paint to avoid a flash.
       (function () {
-        var t;
-        try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        if (t === 'dark') document.documentElement.classList.add('dark');
-
         // Motion on unless the visitor prefers reduced motion. Content starts hidden for
         // reveal animations; if the app hasn't booted within 4s, show everything anyway.
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {

@@ -15,17 +15,11 @@ export type JourneyName = 'lichen' | 'fog';
 
 type Stop = { paper: string; ink: string; muted: string; accent: string; glow: string };
 
-export const journeys: Record<JourneyName, { light: Stop; dark: Stop }> = {
+export const journeys: Record<JourneyName, Stop> = {
   // Pale lichen green.
-  lichen: {
-    light: { paper: '#e3e8dc', ink: '#161b14', muted: '#5d6756', accent: '#3d6b26', glow: '#bccfa5' },
-    dark: { paper: '#0f1810', ink: '#e1e8da', muted: '#89957f', accent: '#9fd17a', glow: '#25381c' },
-  },
+  lichen: { paper: '#e3e8dc', ink: '#161b14', muted: '#5d6756', accent: '#3d6b26', glow: '#bccfa5' },
   // Cool fog blue-grey.
-  fog: {
-    light: { paper: '#e4e8ec', ink: '#11161b', muted: '#5c6670', accent: '#2a5b8c', glow: '#b4c7da' },
-    dark: { paper: '#0e151d', ink: '#e0e6ec', muted: '#8792a0', accent: '#8cb8e6', glow: '#1d2e42' },
-  },
+  fog: { paper: '#e4e8ec', ink: '#11161b', muted: '#5c6670', accent: '#2a5b8c', glow: '#b4c7da' },
 };
 
 /** Palettes cycled across case studies, so each project page has its own colour. */
@@ -53,7 +47,6 @@ const mix = (a: string, b: string, t: number) => {
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
 const html = () => document.documentElement;
-const theme = () => (html().classList.contains('dark') ? 'dark' : 'light');
 
 /** Current colours of the page, for canvas code that can't read CSS (e.g. the hero shader). */
 export const journeyColor = (key: keyof Stop) => getComputedStyle(html()).getPropertyValue(VARS[key]).trim();
@@ -80,9 +73,8 @@ export function initJourney(root: HTMLElement, onChange?: () => void) {
     let i = 0;
     while (i + 1 < tops.length && tops[i + 1] <= edge) i++;
     const t = i === 0 ? 1 : smooth(Math.min(1, Math.max(0, (edge - tops[i]) / (vh * 0.55))));
-    const mode = theme();
-    const to = journeys[names[i]][mode];
-    const from = journeys[names[Math.max(0, i - 1)]][mode];
+    const to = journeys[names[i]];
+    const from = journeys[names[Math.max(0, i - 1)]];
 
     const style = html().style;
     let signature = '';
@@ -91,11 +83,6 @@ export function initJourney(root: HTMLElement, onChange?: () => void) {
       style.setProperty(VARS[key], value);
       signature += value;
     }
-    // Glows only read well on light paper; on dark surfaces they turn muddy, so fade them out
-    // as the paper darkens (black sections stay flat).
-    const [r, g, b] = rgb(from.paper).map((c, k) => c + (rgb(to.paper)[k] - c) * t);
-    const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-    style.setProperty('--glow-alpha', String(Math.min(1, Math.max(0, (lum - 0.35) / 0.4)).toFixed(3)));
     html().dataset.journey = t > 0.5 ? names[i] : names[Math.max(0, i - 1)];
     if (signature !== last) {
       last = signature;
@@ -115,17 +102,13 @@ export function initJourney(root: HTMLElement, onChange?: () => void) {
   ScrollTrigger.addEventListener('refresh', refresh);
   const ro = new ResizeObserver(refresh);
   ro.observe(root);
-  const themeObserver = new MutationObserver(update);
-  themeObserver.observe(html(), { attributes: true, attributeFilter: ['class'] });
 
   return () => {
     window.removeEventListener('scroll', update);
     window.removeEventListener('resize', refresh);
     ScrollTrigger.removeEventListener('refresh', refresh);
     ro.disconnect();
-    themeObserver.disconnect();
     for (const v of Object.values(VARS)) html().style.removeProperty(v);
-    html().style.removeProperty('--glow-alpha');
     delete html().dataset.journey;
   };
 }

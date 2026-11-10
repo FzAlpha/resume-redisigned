@@ -16,14 +16,19 @@ export function TypedText({
   className,
   delay = 0.35,
   speed = 0.045,
+  onDone,
 }: {
   parts: Part[];
   className?: string;
   delay?: number;
   speed?: number;
+  /** Called once the last letter is in (not called without motion). */
+  onDone?: () => void;
 }) {
   const root = useRef<HTMLParagraphElement>(null);
   const caret = useRef<HTMLSpanElement>(null);
+  const done = useRef(onDone);
+  done.current = onDone;
 
   useEffect(() => {
     const el = root.current;
@@ -48,7 +53,10 @@ export function TypedText({
         ch.style.opacity = '1';
         moveTo(ch);
       }, undefined, 0.25 + i * speed));
-      tl.call(() => el.classList.add('is-typed'));
+      tl.call(() => {
+        el.classList.add('is-typed');
+        done.current?.();
+      });
     });
     // Keep the caret on the last letter if the line rewraps.
     const ro = new ResizeObserver(() => {
