@@ -11,11 +11,11 @@
    There is no dark mode: the site is light only.
    ------------------------------------------------------------------ */
 :root {
-  --paper: #e4e8ec;
-  --ink: #11161b;
-  --muted-ink: #5c6670;
-  --accent-ink: #2a5b8c; /* italic serif emphasis */
-  --glow: #b4c7da; /* the soft light behind the page */
+  --paper: #dce6f3;
+  --ink: #0f1725;
+  --muted-ink: #53647b;
+  --accent-ink: #2457a8; /* italic serif emphasis */
+  --glow: #a6c3ea; /* the soft light behind the page */
   --signal: #ff4f00; /* the one UI accent — focus, active, live states */
   --caret: #d7262e; /* the typing caret */
 }

@@ -20,8 +20,8 @@ export const journeys: Record<JourneyName, Stop> = {
   lichen: { paper: '#e3e8dc', ink: '#161b14', muted: '#5d6756', accent: '#3d6b26', glow: '#bccfa5' },
   // Soft lavender.
   lavender: { paper: '#ebe6f3', ink: '#1b1724', muted: '#6a6278', accent: '#6e55a8', glow: '#d4c6ee' },
-  // Cool fog blue-grey.
-  fog: { paper: '#e4e8ec', ink: '#11161b', muted: '#5c6670', accent: '#2a5b8c', glow: '#b4c7da' },
+  // Clear pale blue.
+  fog: { paper: '#dce6f3', ink: '#0f1725', muted: '#53647b', accent: '#2457a8', glow: '#a6c3ea' },
 };
 
 /** Palettes cycled across case studies, so each project page has its own colour. */

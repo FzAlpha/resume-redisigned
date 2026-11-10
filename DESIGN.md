@@ -22,7 +22,7 @@ section can play its scroll animation *before* the colour changes (the Prologue 
 |---|---|---|
 | lichen | `#E3E8DC` / `#161B14` | Hero, Prologue; case studies |
 | lavender | `#EBE6F3` / `#1B1724` | About, Manifesto, Disciplines; case studies |
-| fog | `#E4E8EC` / `#11161B` | Selected work, Stack, Activity, footer; case studies; the default |
+| fog | `#DCE6F3` / `#0F1725` | Selected work, Stack, Activity, footer; case studies; the default |
 
 Each palette also sets `--muted-ink`, `--accent-ink` (italic serif emphasis) and `--glow` (the blurred light of the
 fixed atmosphere layer behind the page). `--signal` `#FF4F00` stays constant: focus, active, live states only.
