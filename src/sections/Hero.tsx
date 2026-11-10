@@ -93,7 +93,7 @@ export function Hero() {
           e.preventDefault();
           scrollToId('about');
         }}
-        className="mt-10 inline-flex items-center gap-2 self-start text-label text-muted-foreground transition-colors hover:text-foreground"
+        className="mt-10 -my-3 inline-flex items-center gap-2 self-start py-3 text-label text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowDown className="size-3.5" /> Scroll
       </a>

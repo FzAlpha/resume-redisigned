@@ -44,7 +44,7 @@ export function Disciplines() {
   }, []);
 
   return (
-    <section ref={section} data-journey="lichen" aria-labelledby="disciplines-title" className="relative overflow-hidden pb-[clamp(6rem,14vw,12rem)] lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pb-0">
+    <section ref={section} data-journey="lavender" aria-labelledby="disciplines-title" className="relative overflow-hidden pb-[clamp(6rem,14vw,12rem)] lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pb-0">
       <div className="container-x">
         <SectionHeader index="02" label="Disciplines" aside="Scroll ↓ — it moves sideways" />
         <h2 id="disciplines-title" className="sr-only">

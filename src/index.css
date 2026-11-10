@@ -176,6 +176,9 @@
   }
   body {
     @apply text-foreground font-sans;
+    /* Scroll animations start some elements scaled/offset; clip so they never widen the page
+       (clip, not hidden: it doesn't create a scroll container, so sticky/pins still work). */
+    overflow-x: clip;
     font-size: 1.0625rem;
     line-height: 1.6;
     font-feature-settings: 'ss01', 'cv11';

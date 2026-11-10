@@ -4,7 +4,7 @@ import { quips } from '@/content/quips';
 
 export function About() {
   return (
-    <section id="about" data-journey="fog" className="container-x scroll-mt-20 py-[clamp(6rem,14vw,12rem)]">
+    <section id="about" data-journey="lavender" className="container-x scroll-mt-20 py-[clamp(6rem,14vw,12rem)]">
       <SectionHeader
         index="01"
         label="About"
@@ -32,7 +32,7 @@ export function About() {
 
         <figure className="md:col-span-4 md:col-start-9">
           {/* Clip reveal on the wrapper, zoom on the frame, Ukiyo drift on the image: three layers, no conflicts. */}
-          <div data-clip-reveal>
+          <div data-clip-reveal className="overflow-hidden">
           <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-muted">
             <img
               data-parallax

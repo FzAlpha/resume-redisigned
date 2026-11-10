@@ -37,7 +37,7 @@ export function Nav() {
         aria-label="Main"
         className="nav-glass pointer-events-auto flex h-12 w-full max-w-[42rem] items-center justify-between gap-2 rounded-full pr-1.5 pl-5"
       >
-        <TLink to="/" label="Index" transition="columns" className="font-mono text-sm font-medium tracking-tight" aria-label="Hritabrata Bardhan — home">
+        <TLink to="/" label="Index" transition="columns" className="-m-2 inline-flex min-h-10 min-w-10 items-center justify-center p-2 font-mono text-sm font-medium tracking-tight" aria-label="Hritabrata Bardhan — home">
           HB
         </TLink>
 

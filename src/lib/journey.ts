@@ -11,19 +11,21 @@
  */
 import { ScrollTrigger } from '@/lib/motion';
 
-export type JourneyName = 'lichen' | 'fog';
+export type JourneyName = 'lichen' | 'lavender' | 'fog';
 
 type Stop = { paper: string; ink: string; muted: string; accent: string; glow: string };
 
 export const journeys: Record<JourneyName, Stop> = {
   // Pale lichen green.
   lichen: { paper: '#e3e8dc', ink: '#161b14', muted: '#5d6756', accent: '#3d6b26', glow: '#bccfa5' },
+  // Soft lavender.
+  lavender: { paper: '#ebe6f3', ink: '#1b1724', muted: '#6a6278', accent: '#6e55a8', glow: '#d4c6ee' },
   // Cool fog blue-grey.
   fog: { paper: '#e4e8ec', ink: '#11161b', muted: '#5c6670', accent: '#2a5b8c', glow: '#b4c7da' },
 };
 
 /** Palettes cycled across case studies, so each project page has its own colour. */
-export const projectJourneys: JourneyName[] = ['fog', 'lichen'];
+export const projectJourneys: JourneyName[] = ['lichen', 'lavender', 'fog'];
 
 const VARS: Record<keyof Stop, string> = {
   paper: '--paper',

@@ -12,7 +12,7 @@ const EMPHASIS = new Set(['low-level', 'systems,']);
  *
  * The section pins on the hero's green; as you scroll, the summary lights up word by word
  * (blur → sharp, dim → full) while a boot log types itself out. Only when the pin releases does
- * About rise into view and the background turn blue (the journey measures the pin-spacer).
+ * About rise into view and the background turn lavender (the journey measures the pin-spacer).
  */
 export function Prologue() {
   const root = useRef<HTMLElement>(null);

@@ -73,13 +73,14 @@ export function Contact() {
       </div>
 
       <div className="mt-[clamp(4rem,8vw,7rem)] grid gap-16 md:grid-cols-12 md:gap-6">
-        <ul data-stagger className="md:col-span-5">
+        <ul data-stagger className="min-w-0 md:col-span-5">
           {contactLinks.map((link) => {
             const content = (
               <>
-                <span className="text-label text-muted-foreground">{link.label}</span>
-                <span className="flex items-center gap-2 text-base">
-                  {link.value}
+                <span className="shrink-0 text-label text-muted-foreground">{link.label}</span>
+                {/* min-w-0 + break-all: the long email can wrap instead of forcing the page wider on small phones. */}
+                <span className="flex min-w-0 items-center gap-2 text-right text-base">
+                  <span className="min-w-0 break-all">{link.value}</span>
                   {link.copy ? (
                     <Copy className="size-3.5 text-muted-foreground transition-colors group-hover:text-signal" />
                   ) : (

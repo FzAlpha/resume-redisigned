@@ -36,7 +36,7 @@ export function Activity() {
                 href={`https://github.com/${github.user}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground transition-colors hover:text-signal"
+                className="-my-3 inline-flex items-center gap-1 py-3 font-mono text-xs text-muted-foreground transition-colors hover:text-signal"
               >
                 @{github.user} <ArrowUpRight className="size-3" />
               </a>
@@ -59,7 +59,7 @@ export function Activity() {
                 href={`https://leetcode.com/u/${leetcode.user}/`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground transition-colors hover:text-signal"
+                className="-my-3 inline-flex items-center gap-1 py-3 font-mono text-xs text-muted-foreground transition-colors hover:text-signal"
               >
                 {leetcode.user} <ArrowUpRight className="size-3" />
               </a>

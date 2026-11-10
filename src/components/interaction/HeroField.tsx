@@ -18,6 +18,8 @@ const colors = ['#3d6b26', '#5f8f3e', '#2c4f1b'];
 export function HeroField({ className }: { className?: string }) {
   const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(false);
+  // Fewer particles on phones: same look, a fraction of the work.
+  const [narrow] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   useEffect(() => {
     if (!motionEnabled()) return;
@@ -44,7 +46,7 @@ export function HeroField({ className }: { className?: string }) {
           <Antigravity
             colors={colors}
             lightMode
-            count={1400}
+            count={narrow ? 650 : 1400}
             ringRadius={7}
             magnetRadius={10}
             particleSize={0.45}

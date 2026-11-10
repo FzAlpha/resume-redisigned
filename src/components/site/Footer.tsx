@@ -23,7 +23,7 @@ export function Footer() {
             e.preventDefault();
             scrollToTop();
           }}
-          className="col-span-2 inline-flex items-center gap-1.5 justify-self-start transition-colors hover:text-foreground md:col-span-1 md:justify-self-end"
+          className="col-span-2 -my-3 inline-flex items-center gap-1.5 justify-self-start py-3 transition-colors hover:text-foreground md:col-span-1 md:justify-self-end"
         >
           Back to top <ArrowUp className="size-3" />
         </a>
