@@ -42,7 +42,7 @@ src/
   components/ui/           shadcn/ui primitives (hand-copied, styled to DESIGN.md)
   components/site/         Nav, Footer, CV sheet, ⌘K palette, mobile menu, contribution grid…
   components/motion/       Lenis, preloader, route curtain, scroll progress, page-animation hook
-  components/interaction/  cursor, magnetic, marquee, tilt cover, work preview, glass lens, hero shader, Lottie tick
+  components/interaction/  cursor, magnetic, marquee, tilt cover, work preview, glass lens, hero background wrapper, Lottie tick
   lib/                     motion tokens, scroll helpers, animation engine, theme, contexts
 scripts/                   fetch-activity.mjs, og-image.mjs
 ```
@@ -75,6 +75,11 @@ Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the pal
 Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for
 emphasis; **Geist** for text; **Geist Mono** for labels.
 
+Hero: the background is React Bits' **Antigravity** (vendored in `src/vendor/react-bits/`, MIT + Commons Clause,
+configured in `components/interaction/HeroField.tsx`): particles gather into a circle around the cursor as it
+approaches and settle back when it leaves; click to burst. The tagline types itself out with a caret
+(`components/motion/TypedText.tsx`).
+
 Section-level effects: pinned horizontal scroll (`sections/Disciplines.tsx`), stacking cards (`sections/Stack.tsx`),
 hero exit (`sections/Hero.tsx`). Everything is skipped under `prefers-reduced-motion` — if you see no motion at all,
 check Windows Settings → Accessibility → Visual effects → **Animation effects** (off = reduced motion).
@@ -96,8 +101,8 @@ Chromium refracts; Safari/Firefox get frosted glass. Never put `transform`, `opa
 
 ## Libraries
 
-GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk · OGL ·
-css-liquid-glass (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
+GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk ·
+css-liquid-glass (vendored) · React Bits Antigravity (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
 ## Deploy

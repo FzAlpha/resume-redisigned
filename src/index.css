@@ -20,6 +20,7 @@
   --glow: #b4c7da; /* the soft light behind the page */
   --glow-alpha: 1; /* 0 on dark paper: no gradients on black */
   --signal: #ff4f00; /* the one UI accent — focus, active, live states */
+  --caret: #d7262e; /* the typing caret */
 }
 .dark {
   --paper: #0e151d;
@@ -28,6 +29,7 @@
   --accent-ink: #8cb8e6;
   --glow: #1d2e42;
   --glow-alpha: 0;
+  --caret: #ff4d55;
 }
 
 :root,
@@ -242,6 +244,32 @@
 }
 html:not(.js-anim) .text-fill {
   background-size: 100% 100%;
+}
+/* Typed line (components/motion/TypedText.tsx): letters appear one by one behind a block caret. */
+.js-anim .typed-ch {
+  opacity: 0;
+}
+.typed-caret {
+  position: absolute;
+  width: 2px;
+  margin-left: 0.08em;
+  transform: scaleY(0.78);
+  background: var(--caret);
+  opacity: 0;
+  pointer-events: none;
+}
+.is-typed .typed-caret {
+  animation: caret-blink 1.05s steps(1) 3;
+  opacity: 0 !important;
+  transition: opacity 0.6s 3s;
+}
+html:not(.js-anim) .typed-caret {
+  display: none;
+}
+@keyframes caret-blink {
+  50% {
+    visibility: hidden;
+  }
 }
 .js-anim [data-hero-line] {
   transform: translateY(110%);

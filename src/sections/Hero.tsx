@@ -3,6 +3,7 @@ import { ArrowDown } from 'lucide-react';
 
 import { GlassLens } from '@/components/interaction/GlassLens';
 import { HeroField } from '@/components/interaction/HeroField';
+import { TypedText } from '@/components/motion/TypedText';
 import { profile } from '@/content/profile';
 import { quips } from '@/content/quips';
 import { useLocalTime } from '@/lib/hooks';
@@ -60,9 +61,10 @@ export function Hero() {
       <p data-hero-fade className="font-mono text-xs text-muted-foreground">
         <span className="text-signal">●</span> {quips.hero}
       </p>
-      <p data-hero-fade className="text-h2 mt-4 max-w-[18ch] md:max-w-none">
-        {profile.tagline.lead} <em className="serif">{profile.tagline.emphasis}</em>
-      </p>
+      <TypedText
+        className="text-h2 mt-4 max-w-[18ch] md:max-w-none"
+        parts={[{ text: `${profile.tagline.lead} ` }, { text: profile.tagline.emphasis, as: 'em', className: 'serif' }]}
+      />
 
       <h1 data-hero-name className="text-display mt-[clamp(1.5rem,4vw,3rem)] -ml-[0.04em]">
         <span className="block overflow-hidden pb-[0.06em]">
