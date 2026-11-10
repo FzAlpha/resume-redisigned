@@ -83,7 +83,11 @@ export function mountHeroField(canvasHost: HTMLElement, trigger: HTMLElement) {
   canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
   canvasHost.appendChild(canvas);
 
-  const isDark = () => document.documentElement.classList.contains('dark');
+  // Strength follows the surface the lines sit on, not the theme: the hero is dark in both.
+  const isDark = () => {
+    const [r, g, b] = cssColor('--paper');
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.5;
+  };
   const program = new Program(gl, {
     vertex,
     fragment,
@@ -121,13 +125,15 @@ export function mountHeroField(canvasHost: HTMLElement, trigger: HTMLElement) {
   trigger.addEventListener('pointermove', onMove);
   trigger.addEventListener('pointerleave', onLeave);
 
-  // Re-read colours on theme change.
-  const themeObserver = new MutationObserver(() => {
+  // Re-read colours on theme change and as the colour journey moves.
+  const recolor = () => {
     program.uniforms.uInk.value = cssColor('--ink');
     program.uniforms.uSignal.value = cssColor('--signal');
     program.uniforms.uStrength.value = isDark() ? 0.16 : 0.11;
-  });
+  };
+  const themeObserver = new MutationObserver(recolor);
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('journeychange', recolor);
 
   // Render only while the hero is on screen and the tab is visible.
   let raf = 0;
@@ -161,6 +167,7 @@ export function mountHeroField(canvasHost: HTMLElement, trigger: HTMLElement) {
     st.kill();
     ro.disconnect();
     themeObserver.disconnect();
+    window.removeEventListener('journeychange', recolor);
     document.removeEventListener('visibilitychange', onVisibility);
     trigger.removeEventListener('pointermove', onMove);
     trigger.removeEventListener('pointerleave', onLeave);

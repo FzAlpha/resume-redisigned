@@ -8,6 +8,7 @@ import { ScrollProgress } from '@/components/motion/ScrollProgress';
 import { Preloader } from '@/components/motion/Preloader';
 import { RouteTransitionProvider } from '@/components/motion/RouteTransition';
 import { Cursor } from '@/components/interaction/Cursor';
+import { Atmosphere } from '@/components/site/Atmosphere';
 import { CvProvider, useCv } from '@/lib/cv';
 import { PaletteProvider, usePalette } from '@/lib/palette';
 import { Home } from '@/pages/Home';
@@ -55,6 +56,7 @@ export function App() {
           >
             Skip to content
           </a>
+          <Atmosphere />
           <ScrollManager />
           <ScrollProgress />
           <Suspense fallback={<div className="min-h-svh" />}>

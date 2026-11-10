@@ -16,6 +16,8 @@ export const quips = {
     copied: 'Copied. Ctrl+C never felt so good.',
     sent: 'Opening your mail app — hit send and you’re in my queue. No race conditions, promise.',
   },
+  // The boot log that types itself out in the prologue.
+  boot: ['Reached target: curiosity', 'Started C++ toolchain (no warnings, allegedly)', 'Loaded Linux, btw'],
   footer: 'Compiled with -O3 and a lot of chai.',
   notFound: 'This pointer is dangling. Let me take you home.',
 } as const;

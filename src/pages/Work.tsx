@@ -11,6 +11,7 @@ import { usePageAnimations } from '@/components/motion/usePageAnimations';
 import { projects } from '@/content/projects';
 import { NotFound } from './NotFound';
 import { usePageTitle } from '@/lib/usePageTitle';
+import { projectJourneys } from '@/lib/journey';
 
 export function Work() {
   const { slug } = useParams();
@@ -44,6 +45,7 @@ function CaseStudy({ index }: { index: number }) {
     <div ref={ref} data-page={`/work/${project.slug}`}>
       <Nav />
       <main id="main" tabIndex={-1} className="container-x pt-32 outline-none">
+        <div data-journey={projectJourneys[index % projectJourneys.length]} aria-hidden />
         <TLink
           to="/#work"
           label="Selected work"

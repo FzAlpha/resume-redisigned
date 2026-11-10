@@ -4,7 +4,8 @@ import { BrowserRouter } from 'react-router';
 
 import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
-import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/fraunces/opsz-italic.css';
 import './index.css';
 
 import { App } from './App';

@@ -37,7 +37,7 @@ All text lives in `src/content/`:
 ```
 src/
   content/                 all copy + activity snapshot
-  sections/                home-page sections (Hero, About, Disciplines, SelectedWork, Stack, Activity, Contact)
+  sections/                home-page sections (Hero, Prologue, About, Manifesto, Disciplines, SelectedWork, Stack, Activity, Contact)
   pages/                   Home, Work (/work/:slug, lazy), NotFound
   components/ui/           shadcn/ui primitives (hand-copied, styled to DESIGN.md)
   components/site/         Nav, Footer, CV sheet, ⌘K palette, mobile menu, contribution grid…
@@ -63,6 +63,17 @@ Scroll animations are declarative — add a data attribute and `src/lib/animatio
 | `data-clip-reveal` | frame opens from an inset clip while zooming out |
 | `data-expand` | section grows from a rounded card to full bleed |
 | `data-stagger` · `data-count="N"` · `data-scramble` · `data-parallax` · `data-grow` | fade-up lists · count-up · label decode · image drift · bar grow |
+
+### Colour journey
+
+The background changes colour as you scroll (`src/lib/journey.ts`). Give a section `data-journey="night|bone|lichen|fog|sand|clay"`
+and the page blends into that palette as the section arrives; palettes live in `journeys` with light and dark variants. Every
+token is mixed from five base colours, so the whole UI follows. Pinned sections hold their colour for the whole pin: the
+**Prologue** (`sections/Prologue.tsx`) pins on the night palette and lights up its statement word by word before the page turns to bone.
+Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`, faded out on dark paper.
+
+Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for
+emphasis; **Geist** for text; **Geist Mono** for labels.
 
 Section-level effects: pinned horizontal scroll (`sections/Disciplines.tsx`), stacking cards (`sections/Stack.tsx`),
 hero exit (`sections/Hero.tsx`). Everything is skipped under `prefers-reduced-motion` — if you see no motion at all,

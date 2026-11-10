@@ -6,32 +6,43 @@ Structure follows the DESIGN.md format used by VoltAgent/awesome-claude-design, 
 ## 1. Visual theme & atmosphere
 
 Editorial, engineered, calm. Typography is the hero. The page reads like a well-set technical journal: oversized type, generous whitespace, 1px hairlines, almost no shadows or decoration.
-The mood is a precise instrument at rest. **No 3D, no video, no ambient loops.**
+The mood is a precise instrument at rest, lit by a slow, warm glow that changes colour section by section. **No 3D, no video.**
 
-## 2. Colour
+## 2. Colour — the journey
 
-| Token | Light | Dark | Use |
+The page background changes as you scroll. Each section declares a palette (`data-journey`), and
+`src/lib/journey.ts` blends the five base colours between neighbouring sections onto `<html>` while the next
+section's top travels from 85% to 30% of the viewport. Pinned sections hold their colour for the whole pin, so a
+section can play its scroll animation *before* the colour changes (the Prologue does this). Every other token is
+`color-mix()`ed from the five, so cards, hairlines and inputs follow automatically.
+
+| Palette | Light paper / ink | Dark paper / ink | Where |
 |---|---|---|---|
-| `--paper` | `#F4F3EF` | `#0A0A0A` | Page background |
-| `--ink` | `#0B0B0C` | `#EDEDEA` | Text, primary buttons |
-| `--muted-ink` | `#6F6F6B` | `#8A8A86` | Secondary text, meta, labels |
-| `--hairline` | ink @ 9% | ink @ 9% | Dividers, borders |
-| `--card` | `#EFEEE9` | `#111110` | Rare raised surfaces |
-| `--signal` | `#FF4F00` | `#FF4F00` | **The one accent.** Focus rings, active nav, "live" dots, selection. Never for large fills |
+| night | `#100E0C` / `#F2ECE2` | `#080707` / `#ECE6DC` | Hero, Prologue (dark in both themes) |
+| bone | `#F1ECE2` / `#16130F` | `#17130F` / `#ECE6DC` | About, Manifesto, default |
+| lichen | `#E3E8DC` / `#161B14` | `#0F1810` / `#E1E8DA` | Disciplines |
+| fog | `#E4E8EC` / `#11161B` | `#0E151D` / `#E0E6EC` | Selected work, case studies |
+| sand | `#EFE4D2` / `#1D160D` | `#1B140B` / `#EFE5D6` | Stack |
+| clay | `#EDE2DC` / `#1E1412` | `#1C110F` / `#EFE2DD` | Activity, footer, case studies |
 
-Rules: monochrome by default. Use signal at most once per viewport outside focus states. Never use a gradient as a background.
+Each palette also sets `--muted-ink`, `--accent-ink` (italic serif emphasis) and `--glow` (the blurred light of the
+fixed atmosphere layer behind the page). `--signal` `#FF4F00` stays constant: focus, active, live states only.
+Sections are transparent; only the inverse Contact island paints its own background.
 
 ## 3. Typography
 
 | Role | Font | Size | Line height / tracking |
 |---|---|---|---|
-| Display (name) | Geist 500 | `clamp(3.5rem, 12.5vw, 13rem)` | 0.88 / -0.055em |
-| H1 | Geist 500 | `clamp(2.5rem, 6vw, 5.5rem)` | 0.95 / -0.045em |
-| H2 | Geist 500 | `clamp(1.75rem, 3.6vw, 3rem)` | 1.05 / -0.035em |
-| Statement | Geist 450 | `clamp(1.6rem, 3.4vw, 3.25rem)` | 1.12 / -0.03em |
+| Display (name) | Fraunces 340, optical size auto | `clamp(3.5rem, 12.5vw, 13rem)` | 0.9 / -0.045em |
+| H1 | Fraunces 360 | `clamp(2.6rem, 6.4vw, 6rem)` | 0.98 / -0.035em |
+| H2 | Fraunces 380 | `clamp(1.9rem, 3.8vw, 3.25rem)` | 1.05 / -0.025em |
+| Statement | Geist 400 | `clamp(1.6rem, 3.3vw, 3.1rem)` | 1.16 / -0.035em |
 | Body | Geist 400 | 17px | 1.6 |
-| Label | Geist Mono 400, uppercase | 12px | 1 / +0.04em |
-| Emphasis | Instrument Serif *italic* | inherits | one or two words per headline, max |
+| Label | Geist Mono 400, uppercase | 11px | 1.2 / +0.14em |
+| Emphasis | Fraunces *italic* 360 in `--accent-ink` | inherits | one or two words per headline, max |
+
+A high-contrast display serif for headings against a neutral grotesk for reading, with italic serif emphasis
+picked out in the section's accent colour.
 
 Numbers in the UI (indices, counters, time) are always Geist Mono with tabular figures.
 

@@ -9,6 +9,7 @@ import { Stack } from '@/sections/Stack';
 import { Contact } from '@/sections/Contact';
 import { Activity } from '@/sections/Activity';
 import { Manifesto } from '@/sections/Manifesto';
+import { Prologue } from '@/sections/Prologue';
 import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Home() {
@@ -19,6 +20,7 @@ export function Home() {
       <Nav />
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
+        <Prologue />
         <About />
         <Manifesto />
         <Disciplines />

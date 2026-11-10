@@ -4,7 +4,7 @@ import { quips } from '@/content/quips';
 
 export function About() {
   return (
-    <section id="about" className="container-x scroll-mt-20 py-[clamp(6rem,14vw,12rem)]">
+    <section id="about" data-journey="bone" className="container-x scroll-mt-20 py-[clamp(6rem,14vw,12rem)]">
       <SectionHeader
         index="01"
         label="About"
