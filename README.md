@@ -109,10 +109,18 @@ GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-
 css-liquid-glass (vendored) · React Bits Antigravity + Tech Text (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
-## Deploy
+## Deploy (Vercel)
 
-`npm run build` and upload `dist/` to any static host. SPA routing is preconfigured for **Vercel** (`vercel.json`)
-and **Netlify** (`public/_redirects`). After choosing a domain, make the `og:image` URLs in `index.html` absolute.
+The repo is ready for Vercel's Git integration — no settings to fill in:
+
+1. On vercel.com: **Add New → Project → Import** `FzAlpha/resume-redisigned`.
+2. Leave everything as detected (it reads `vercel.json`: Vite, `npm ci`, `npm run build`, output `dist`, Node ≥ 22.12) and press **Deploy**.
+
+After that, every push to `main` deploys to production automatically, and every other branch or pull request gets its own
+preview URL. Each build also refreshes the GitHub/LeetCode numbers (`prebuild`; keeps the last snapshot if those sites are down).
+
+`vercel.json` also rewrites page URLs (e.g. `/work/log-manager`) to `index.html` for client-side routing, caches built assets
+for a year, and sets basic security headers. After choosing a domain, make the `og:image` URLs in `index.html` absolute.
 
 ## History
 
