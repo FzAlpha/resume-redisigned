@@ -66,10 +66,10 @@ Scroll animations are declarative — add a data attribute and `src/lib/animatio
 
 ### Colour journey
 
-The background changes colour as you scroll (`src/lib/journey.ts`). Give a section `data-journey="night|bone|lichen|fog|sand|clay"`
+The background changes colour as you scroll (`src/lib/journey.ts`). Give a section `data-journey="lichen|fog"`
 and the page blends into that palette as the section arrives; palettes live in `journeys` with light and dark variants. Every
 token is mixed from five base colours, so the whole UI follows. Pinned sections hold their colour for the whole pin: the
-**Prologue** (`sections/Prologue.tsx`) pins on the night palette and lights up its statement word by word before the page turns to bone.
+**Prologue** (`sections/Prologue.tsx`) pins on the hero's green and lights up its statement word by word before the page turns blue.
 Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`, faded out on dark paper.
 
 Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for

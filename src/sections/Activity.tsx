@@ -18,7 +18,7 @@ export function Activity() {
   const max = leetcode ? Math.max(leetcode.easy, leetcode.medium, leetcode.hard) : 1;
 
   return (
-    <section id="activity" data-journey="clay" className="container-x scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
+    <section id="activity" data-journey="fog" className="container-x scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
       <SectionHeader index="05" label="Activity" aside={`Snapshot · ${activity.fetchedAt}`} />
       <div className="mt-[clamp(3rem,6vw,5rem)] flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <h2 data-split className="text-h1 max-w-[14ch]">

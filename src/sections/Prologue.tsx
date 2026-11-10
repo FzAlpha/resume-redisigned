@@ -10,9 +10,9 @@ const EMPHASIS = new Set(['low-level', 'systems,']);
 /**
  * The scroll animation that plays *before* the first colour change.
  *
- * The section pins on the night palette; as you scroll, the summary lights up word by word
+ * The section pins on the hero's green; as you scroll, the summary lights up word by word
  * (blur → sharp, dim → full) while a boot log types itself out. Only when the pin releases does
- * About rise into view and the background turn to bone (the journey measures the pin-spacer).
+ * About rise into view and the background turn blue (the journey measures the pin-spacer).
  */
 export function Prologue() {
   const root = useRef<HTMLElement>(null);
@@ -40,7 +40,7 @@ export function Prologue() {
   const words = profile.summary.split(' ');
 
   return (
-    <section ref={root} data-journey="night" aria-label="Prologue" className="relative flex min-h-svh flex-col justify-center overflow-hidden py-24">
+    <section ref={root} data-journey="lichen" aria-label="Prologue" className="relative flex min-h-svh flex-col justify-center overflow-hidden py-24">
       <div className="container-x">
         <p className="text-label text-muted-foreground">(00) — Prologue</p>
         <p data-prologue-text className="text-h1 mt-8 max-w-[22ch] text-pretty">

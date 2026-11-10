@@ -13,17 +13,13 @@ The mood is a precise instrument at rest, lit by a slow, warm glow that changes 
 The page background changes as you scroll. Each section declares a palette (`data-journey`), and
 `src/lib/journey.ts` blends the five base colours between neighbouring sections onto `<html>` while the next
 section's top travels from 85% to 30% of the viewport. Pinned sections hold their colour for the whole pin, so a
-section can play its scroll animation *before* the colour changes (the Prologue does this). Every other token is
+section can play its scroll animation *before* the colour changes (the Prologue does this). The page uses just two families, green and blue, alternating section by section. Every other token is
 `color-mix()`ed from the five, so cards, hairlines and inputs follow automatically.
 
 | Palette | Light paper / ink | Dark paper / ink | Where |
 |---|---|---|---|
-| night | `#100E0C` / `#F2ECE2` | `#080707` / `#ECE6DC` | Hero, Prologue (dark in both themes) |
-| bone | `#F1ECE2` / `#16130F` | `#17130F` / `#ECE6DC` | About, Manifesto, default |
-| lichen | `#E3E8DC` / `#161B14` | `#0F1810` / `#E1E8DA` | Disciplines |
-| fog | `#E4E8EC` / `#11161B` | `#0E151D` / `#E0E6EC` | Selected work, case studies |
-| sand | `#EFE4D2` / `#1D160D` | `#1B140B` / `#EFE5D6` | Stack |
-| clay | `#EDE2DC` / `#1E1412` | `#1C110F` / `#EFE2DD` | Activity, footer, case studies |
+| lichen | `#E3E8DC` / `#161B14` | `#0F1810` / `#E1E8DA` | Hero, Prologue, Disciplines, Stack, case studies |
+| fog | `#E4E8EC` / `#11161B` | `#0E151D` / `#E0E6EC` | About, Manifesto, Selected work, Activity, footer, case studies; the default |
 
 Each palette also sets `--muted-ink`, `--accent-ink` (italic serif emphasis) and `--glow` (the blurred light of the
 fixed atmosphere layer behind the page). `--signal` `#FF4F00` stays constant: focus, active, live states only.

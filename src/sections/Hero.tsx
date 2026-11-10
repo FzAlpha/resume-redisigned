@@ -52,7 +52,7 @@ export function Hero() {
     <section
       ref={root}
       id="top"
-      data-journey="night"
+      data-journey="lichen"
       className="container-x relative flex min-h-svh flex-col justify-end pt-28 pb-[clamp(1.5rem,4vw,3rem)]"
     >
       <HeroField className="-z-10" />

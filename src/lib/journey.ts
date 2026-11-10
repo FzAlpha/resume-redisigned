@@ -11,21 +11,11 @@
  */
 import { ScrollTrigger } from '@/lib/motion';
 
-export type JourneyName = 'night' | 'bone' | 'lichen' | 'fog' | 'sand' | 'clay';
+export type JourneyName = 'lichen' | 'fog';
 
 type Stop = { paper: string; ink: string; muted: string; accent: string; glow: string };
 
 export const journeys: Record<JourneyName, { light: Stop; dark: Stop }> = {
-  // Carbon night with an ember glow: the hero and its prologue, in both themes.
-  night: {
-    light: { paper: '#100e0c', ink: '#f2ece2', muted: '#9c9488', accent: '#ff8a4c', glow: '#5c2810' },
-    dark: { paper: '#080707', ink: '#ece6dc', muted: '#8a837a', accent: '#ff8a4c', glow: '#3d1a0a' },
-  },
-  // Warm bone paper.
-  bone: {
-    light: { paper: '#f1ece2', ink: '#16130f', muted: '#6d665c', accent: '#b8430f', glow: '#f3c9a4' },
-    dark: { paper: '#17130f', ink: '#ece6dc', muted: '#968e82', accent: '#ff8a4c', glow: '#4a2c16' },
-  },
   // Pale lichen green.
   lichen: {
     light: { paper: '#e3e8dc', ink: '#161b14', muted: '#5d6756', accent: '#3d6b26', glow: '#bccfa5' },
@@ -36,20 +26,10 @@ export const journeys: Record<JourneyName, { light: Stop; dark: Stop }> = {
     light: { paper: '#e4e8ec', ink: '#11161b', muted: '#5c6670', accent: '#2a5b8c', glow: '#b4c7da' },
     dark: { paper: '#0e151d', ink: '#e0e6ec', muted: '#8792a0', accent: '#8cb8e6', glow: '#1d2e42' },
   },
-  // Sun-warmed sand.
-  sand: {
-    light: { paper: '#efe4d2', ink: '#1d160d', muted: '#73624b', accent: '#a8500c', glow: '#f1bd86' },
-    dark: { paper: '#1b140b', ink: '#efe5d6', muted: '#998a72', accent: '#ffa25c', glow: '#4a2f12' },
-  },
-  // Dusty clay rose.
-  clay: {
-    light: { paper: '#ede2dc', ink: '#1e1412', muted: '#77605a', accent: '#a83a2a', glow: '#e8b3a3' },
-    dark: { paper: '#1c110f', ink: '#efe2dd', muted: '#9c847c', accent: '#ff8f7a', glow: '#4a2019' },
-  },
 };
 
 /** Palettes cycled across case studies, so each project page has its own colour. */
-export const projectJourneys: JourneyName[] = ['fog', 'lichen', 'clay', 'sand'];
+export const projectJourneys: JourneyName[] = ['fog', 'lichen'];
 
 const VARS: Record<keyof Stop, string> = {
   paper: '--paper',
@@ -82,7 +62,7 @@ export const journeyColor = (key: keyof Stop) => getComputedStyle(html()).getPro
 export function initJourney(root: HTMLElement, onChange?: () => void) {
   const nodes = [...root.querySelectorAll<HTMLElement>('[data-journey]')];
   if (!nodes.length) return () => {};
-  const names = nodes.map((n) => (n.dataset.journey as JourneyName) in journeys ? (n.dataset.journey as JourneyName) : 'bone');
+  const names = nodes.map((n) => (n.dataset.journey as JourneyName) in journeys ? (n.dataset.journey as JourneyName) : 'fog');
 
   let tops: number[] = [];
   let last = '';

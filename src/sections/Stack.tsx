@@ -52,7 +52,7 @@ export function Stack() {
   }, []);
 
   return (
-    <section id="stack" data-journey="sand" className="scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
+    <section id="stack" data-journey="lichen" className="scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
       <div className="container-x">
         <SectionHeader index="04" label="Stack" aside="Tools I reach for" />
         <div className="mt-[clamp(3rem,6vw,5rem)] flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

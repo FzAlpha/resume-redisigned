@@ -20,7 +20,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('dark', theme === 'dark');
-    root.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#080707' : '#100e0c');
+    root.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0f1810' : '#e3e8dc');
   }, [theme]);
 
   const setTheme = useCallback((t: Theme) => {

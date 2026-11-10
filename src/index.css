@@ -13,20 +13,20 @@
    ------------------------------------------------------------------ */
 :root,
 .island-light {
-  --paper: #f1ece2;
-  --ink: #16130f;
-  --muted-ink: #6d665c;
-  --accent-ink: #b8430f; /* italic serif emphasis */
-  --glow: #f3c9a4; /* the soft light behind the page */
+  --paper: #e4e8ec;
+  --ink: #11161b;
+  --muted-ink: #5c6670;
+  --accent-ink: #2a5b8c; /* italic serif emphasis */
+  --glow: #b4c7da; /* the soft light behind the page */
   --glow-alpha: 1; /* 0 on dark paper: no gradients on black */
   --signal: #ff4f00; /* the one UI accent — focus, active, live states */
 }
 .dark {
-  --paper: #17130f;
-  --ink: #ece6dc;
-  --muted-ink: #8f887d;
-  --accent-ink: #ff8a4c;
-  --glow: #4a2c16;
+  --paper: #0e151d;
+  --ink: #e0e6ec;
+  --muted-ink: #8792a0;
+  --accent-ink: #8cb8e6;
+  --glow: #1d2e42;
   --glow-alpha: 0;
 }
 
