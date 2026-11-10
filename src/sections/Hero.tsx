@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 
-import { LiquidLens } from '@/components/interaction/LiquidLens';
+import { GlassLens } from '@/components/interaction/GlassLens';
 import { HeroField } from '@/components/interaction/HeroField';
 import { profile } from '@/content/profile';
 import { quips } from '@/content/quips';
@@ -28,7 +28,11 @@ export function Hero() {
           // y: 0 clears the CSS pre-state (translateY(110%)), which GSAP would otherwise keep as a px offset.
           .fromTo('[data-hero-line]', { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: 1.25, ease: ease.out, stagger: 0.09 })
           .fromTo('[data-hero-fade]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9, ease: ease.out, stagger: 0.06 }, 0.35);
-        // (No scroll parallax on the name: the liquid-glass lens caches a capture of it.)
+
+        // Exit: as you scroll away the name shrinks back into the page and the meta row drifts up.
+        const exit = { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.5 };
+        gsap.to('[data-hero-name]', { scale: 0.82, yPercent: -18, opacity: 0.12, transformOrigin: '0% 100%', ease: 'none', scrollTrigger: exit });
+        gsap.to('[data-hero-meta]', { y: -60, opacity: 0, ease: 'none', scrollTrigger: exit });
       }, el);
     });
     return () => {
@@ -48,12 +52,10 @@ export function Hero() {
     <section
       ref={root}
       id="top"
-      className="container-x relative isolate flex min-h-svh flex-col justify-end pt-28 pb-[clamp(1.5rem,4vw,3rem)]"
+      className="container-x relative flex min-h-svh flex-col justify-end pt-28 pb-[clamp(1.5rem,4vw,3rem)]"
     >
-      {/* Background as a real child: the glass lens refracts the section's children, never the section itself. */}
-      <div aria-hidden className="absolute inset-0 -z-10 bg-background" />
       <HeroField className="-z-10" />
-      <LiquidLens className="top-[38%] right-[12%]" />
+      <GlassLens className="top-[38%] right-[12%]" />
       <p data-hero-fade className="font-mono text-xs text-muted-foreground">
         <span className="text-signal">●</span> {quips.hero}
       </p>
@@ -75,7 +77,7 @@ export function Hero() {
         </span>
       </h1>
 
-      <dl className="mt-[clamp(2rem,5vw,4rem)] grid grid-cols-2 gap-x-6 gap-y-5 border-t pt-5 md:grid-cols-4">
+      <dl data-hero-meta className="mt-[clamp(2rem,5vw,4rem)] grid grid-cols-2 gap-x-6 gap-y-5 border-t pt-5 md:grid-cols-4">
         {meta.map((m) => (
           <div key={m.k} data-hero-fade className="flex flex-col gap-2">
             <dt className="text-label text-muted-foreground">{m.k}</dt>

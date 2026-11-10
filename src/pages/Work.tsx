@@ -41,7 +41,7 @@ function CaseStudy({ index }: { index: number }) {
   ];
 
   return (
-    <div ref={ref}>
+    <div ref={ref} data-page={`/work/${project.slug}`}>
       <Nav />
       <main id="main" tabIndex={-1} className="container-x pt-32 outline-none">
         <TLink
@@ -56,12 +56,13 @@ function CaseStudy({ index }: { index: number }) {
           <p data-scramble className="text-label text-muted-foreground">
             {`(${String(index + 1).padStart(2, '0')}) — ${project.category}`}
           </p>
-          <h1 data-split className="text-h1 mt-4">
+          {/* Shares its view-transition-name with the row on the work list: the "morph" target. */}
+          <h1 className="text-h1 mt-4" style={{ viewTransitionName: `vt-title-${project.slug}` }}>
             {project.title}
           </h1>
         </header>
 
-        <div data-stagger className="mt-[clamp(2.5rem,6vw,5rem)]">
+        <div data-clip-reveal className="mt-[clamp(2.5rem,6vw,5rem)]">
           <TiltCover className="aspect-[16/10] md:aspect-[16/8]">
             <ProjectCover project={project} index={index} className="size-full" />
           </TiltCover>

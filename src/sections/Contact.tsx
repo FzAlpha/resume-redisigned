@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { contactLinks, email } from '@/content/contact';
 import { quips } from '@/content/quips';
 import { confettiFrom, toastSuccess } from '@/lib/celebrate';
+import { useTheme } from '@/lib/theme';
+import { cn } from '@/lib/utils';
 
 async function copy(text: string) {
   try {
@@ -21,6 +23,7 @@ async function copy(text: string) {
 }
 
 export function Contact() {
+  const { theme } = useTheme();
   const [errors, setErrors] = useState<{ name?: boolean; email?: boolean }>({});
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -44,7 +47,17 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="container-x scroll-mt-20 pb-[clamp(4rem,10vw,8rem)]">
+    <section
+      id="contact"
+      data-expand
+      // Inverse island: dark on the light theme, light on the dark theme. It grows from a
+      // rounded inset card to full bleed as it scrolls in (data-expand).
+      className={cn(
+        'scroll-mt-20 bg-background pt-[clamp(5rem,10vw,8rem)] pb-[clamp(4rem,10vw,8rem)] text-foreground',
+        theme === 'dark' ? 'island-light' : 'dark',
+      )}
+    >
+      <div className="container-x">
       <SectionHeader index="06" label="Contact" aside={quips.contact.uptime} />
 
       <h2 data-split className="text-display mt-[clamp(3rem,6vw,5rem)] text-[clamp(3rem,10vw,10rem)]">
@@ -139,6 +152,7 @@ export function Contact() {
             Send message <ArrowUpRight />
           </Button>
         </form>
+      </div>
       </div>
     </section>
   );

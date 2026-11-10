@@ -50,14 +50,43 @@ scripts/                   fetch-activity.mjs, og-image.mjs
 ### Animations
 
 Scroll animations are declarative — add a data attribute and `src/lib/animations.ts` handles it:
-`data-split` (headline line reveal) · `data-scrub-words` (word-by-word opacity) · `data-stagger` (children fade up) ·
-`data-count="N"` (count up) · `data-scramble` (label decode) · `data-parallax` (image drift) · `data-grow` (bar grows).
-Everything is skipped under `prefers-reduced-motion`. Add `?intro` to the URL to replay the preloader.
+
+| Attribute | Effect |
+|---|---|
+| `data-split` | headline words rise from a line mask |
+| `data-chars` | letters start scattered and assemble (scrubbed) |
+| `data-scrub-words` | paragraph lights up word by word (scrubbed) |
+| `data-fill` + `.text-fill` | outline text fills with ink (scrubbed) |
+| `data-scrub-x="-20"` | slides horizontally with the scroll |
+| `data-speed="1.1"` | parallax depth |
+| `data-skew` | leans with scroll velocity |
+| `data-clip-reveal` | frame opens from an inset clip while zooming out |
+| `data-expand` | section grows from a rounded card to full bleed |
+| `data-stagger` · `data-count="N"` · `data-scramble` · `data-parallax` · `data-grow` | fade-up lists · count-up · label decode · image drift · bar grow |
+
+Section-level effects: pinned horizontal scroll (`sections/Disciplines.tsx`), stacking cards (`sections/Stack.tsx`),
+hero exit (`sections/Hero.tsx`). Everything is skipped under `prefers-reduced-motion` — if you see no motion at all,
+check Windows Settings → Accessibility → Visual effects → **Animation effects** (off = reduced motion).
+Add `?intro` to the URL to replay the preloader.
+
+### Page transitions
+
+`components/motion/RouteTransition.tsx` — a different one per kind of move:
+**morph** (work list → case study; the title flies into the heading, View Transitions API) ·
+**slide** (case study → next) · **curtain** (back to the work list) · **columns** (logo / section links from a case study) ·
+**zoom** (⌘K jumps, 404). View-Transition styles fall back to the curtain where unsupported.
+
+### Liquid glass
+
+`src/vendor/liquid-glass/` is [nordify/css-liquid-glass](https://github.com/nordify/css-liquid-glass) (MIT), vendored
+unmodified and wrapped by `components/interaction/useLiquidGlass.ts`. Used on the nav pill and the draggable hero lens.
+Chromium refracts; Safari/Firefox get frosted glass. Never put `transform`, `opacity`, `filter`, `isolation`,
+`will-change` or `overflow:hidden` on a glass element or its ancestors.
 
 ## Libraries
 
 GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk · OGL ·
-@ybouane/liquidglass · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
+css-liquid-glass (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
 ## Deploy

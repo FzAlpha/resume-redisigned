@@ -5,8 +5,10 @@
 
 /* ------------------------------------------------------------------
    Tokens — source of truth is DESIGN.md. Change them there first.
+   .island-light re-applies the light palette inside the dark theme (inverse sections).
    ------------------------------------------------------------------ */
-:root {
+:root,
+.island-light {
   /* palette */
   --paper: #f4f3ef;
   --ink: #0b0b0c;
@@ -194,6 +196,30 @@
 .js-anim [data-stagger] > * {
   opacity: 0;
 }
+.js-anim [data-chars] {
+  visibility: hidden;
+}
+.chars-word {
+  white-space: nowrap;
+}
+.chars-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Text fill: an outline that a solid ink layer sweeps across (data-fill animates its size). */
+.text-fill {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--foreground) 35%, transparent);
+  background-image: linear-gradient(var(--foreground), var(--foreground));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html:not(.js-anim) .text-fill {
+  background-size: 100% 100%;
+}
 .js-anim [data-hero-line] {
   transform: translateY(110%);
 }
@@ -223,22 +249,15 @@ html.is-loading body {
    Interaction layer
    ------------------------------------------------------------------ */
 
-/* Frosted glass (CSS) for the nav pill: blur + saturation, a lit top edge, soft shadow. */
-.glass {
-  background: color-mix(in oklab, var(--background) 62%, transparent);
-  backdrop-filter: blur(22px) saturate(1.8);
-  -webkit-backdrop-filter: blur(22px) saturate(1.8);
-  border: 1px solid rgb(11 11 12 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.55),
-    inset 0 -1px 0 rgb(0 0 0 / 0.03),
-    0 10px 30px -14px rgb(0 0 0 / 0.3);
+/* Nav pill tuning for the liquid glass (src/vendor/liquid-glass). A light tint of the
+   page colour keeps the links legible over busy content; the shadow is softened. */
+.nav-glass {
+  --lg-tint: color-mix(in oklab, var(--background) 38%, transparent);
+  --lg-s: 0.8;
+  --lg-shadow: var(--ink);
 }
-.dark .glass {
-  border-color: rgb(255 255 255 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.08),
-    0 10px 30px -14px rgb(0 0 0 / 0.8);
+.dark .nav-glass {
+  --lg-tint: color-mix(in oklab, var(--background) 45%, transparent);
 }
 
 /* Border beam (after Magic UI): a signal-coloured arc travels round the edge — on hover only. */
@@ -304,11 +323,82 @@ html.has-cursor [cmdk-input] {
   cursor: text;
 }
 
-/* Theme switch: circular reveal from the toggle (View Transitions). */
-::view-transition-old(root),
-::view-transition-new(root) {
+/* ------------------------------------------------------------------
+   View Transitions — html[data-vt] picks the style (RouteTransition.tsx, ThemeToggle.tsx)
+   ------------------------------------------------------------------ */
+
+/* Theme switch: circular reveal from the toggle (the clip is animated from JS). */
+html[data-vt='theme']::view-transition-old(root),
+html[data-vt='theme']::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* morph: the title flies from its list row into the case-study heading; the rest
+   of the old page lifts away while the new one rises in underneath. */
+html[data-vt='morph']::view-transition-group(*) {
+  animation-duration: 0.9s;
+  animation-timing-function: var(--ease-out-expo);
+}
+html[data-vt='morph']::view-transition-old(root) {
+  animation: vt-lift-out 0.55s var(--ease-in-out-quart) both;
+}
+html[data-vt='morph']::view-transition-new(root) {
+  animation: vt-rise-in 0.9s var(--ease-out-expo) 0.15s both;
+}
+
+/* slide: case study → next case study, pages push sideways. */
+html[data-vt='slide']::view-transition-old(*) {
+  animation: vt-push-out 0.8s var(--ease-in-out-quart) both;
+}
+html[data-vt='slide']::view-transition-new(*) {
+  animation: vt-push-in 0.8s var(--ease-in-out-quart) both;
+}
+
+/* zoom: the old page sinks and blurs, the new one settles from slightly larger. */
+html[data-vt='zoom']::view-transition-old(*) {
+  animation: vt-sink 0.6s var(--ease-in-out-quart) both;
+}
+html[data-vt='zoom']::view-transition-new(*) {
+  animation: vt-settle 0.8s var(--ease-out-expo) 0.2s both;
+}
+
+@keyframes vt-lift-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6%);
+  }
+}
+@keyframes vt-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8%);
+  }
+}
+@keyframes vt-push-out {
+  to {
+    transform: translateX(-35%);
+    opacity: 0.3;
+  }
+}
+@keyframes vt-push-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes vt-sink {
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(10px);
+  }
+}
+@keyframes vt-settle {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(6px);
+  }
 }
 
 /* Printing from the CV sheet prints only the CV. */

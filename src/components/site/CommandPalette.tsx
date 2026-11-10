@@ -51,7 +51,7 @@ export function CommandPalette() {
   };
 
   const goTo = (id: string, label: string) =>
-    closeThen(() => (pathname === '/' ? scrollToId(id) : go(`/#${id}`, label)));
+    closeThen(() => (pathname === '/' ? scrollToId(id) : go(`/#${id}`, label, 'zoom')));
 
   function run(raw: string) {
     const input = raw.trim();
@@ -142,7 +142,7 @@ export function CommandPalette() {
             </CommandItem>
           ))}
           {projects.map((p) => (
-            <CommandItem key={p.slug} value={`project ${p.title} ${p.category}`} onSelect={() => closeThen(() => go(`/work/${p.slug}`, p.title))}>
+            <CommandItem key={p.slug} value={`project ${p.title} ${p.category}`} onSelect={() => closeThen(() => go(`/work/${p.slug}`, p.title, 'zoom'))}>
               <ArrowUpRight /> {p.title}
               <CommandShortcut>{p.category}</CommandShortcut>
             </CommandItem>

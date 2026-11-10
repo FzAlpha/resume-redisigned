@@ -17,7 +17,7 @@ export function About() {
             {profile.statement}
           </p>
 
-          <dl data-stagger className="mt-[clamp(3rem,6vw,5rem)] grid grid-cols-2 gap-6 sm:grid-cols-3">
+          <dl data-stagger data-speed="1.12" className="mt-[clamp(3rem,6vw,5rem)] grid grid-cols-2 gap-6 sm:grid-cols-3">
             {profile.stats.map((s) => (
               <div key={s.label} className="border-t pt-4">
                 <dd className="font-mono text-[clamp(2.5rem,5vw,4rem)] leading-none font-light tracking-tight tabular-nums">
@@ -31,6 +31,8 @@ export function About() {
         </div>
 
         <figure className="md:col-span-4 md:col-start-9">
+          {/* Clip reveal on the wrapper, zoom on the frame, Ukiyo drift on the image: three layers, no conflicts. */}
+          <div data-clip-reveal>
           <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-muted">
             <img
               data-parallax
@@ -42,6 +44,7 @@ export function About() {
               decoding="async"
               className="size-full object-cover grayscale transition-[filter] duration-700 ease-out-expo group-hover:grayscale-0"
             />
+          </div>
           </div>
           <figcaption className="mt-3 flex justify-between text-label text-muted-foreground">
             <span>@{profile.handle}</span>

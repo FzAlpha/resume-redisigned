@@ -39,7 +39,10 @@ export function SelectedWork() {
               <span className="col-span-2 font-mono text-sm text-muted-foreground tabular-nums md:col-span-1">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="col-span-9 text-h2 transition-transform duration-500 ease-out-expo group-hover:translate-x-2 md:col-span-5">
+              <span
+                className="col-span-9 text-h2 transition-transform duration-500 ease-out-expo group-hover:translate-x-2 md:col-span-5"
+                style={{ viewTransitionName: `vt-title-${p.slug}` }}
+              >
                 {p.title}
               </span>
               <ArrowUpRight

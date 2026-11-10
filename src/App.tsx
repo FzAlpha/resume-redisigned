@@ -13,8 +13,7 @@ import { PaletteProvider, usePalette } from '@/lib/palette';
 import { Home } from '@/pages/Home';
 
 // Loaded on demand: case studies (Atropos), the palette (cmdk + Motion), the CV sheet.
-const Work = lazy(() => import('@/pages/Work').then((m) => ({ default: m.Work })));
-const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })));
+import { NotFound, Work } from '@/pages/lazy';
 const CommandPalette = lazy(() => import('@/components/site/CommandPalette').then((m) => ({ default: m.CommandPalette })));
 const CvSheet = lazy(() => import('@/components/site/CvSheet').then((m) => ({ default: m.CvSheet })));
 

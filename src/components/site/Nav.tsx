@@ -1,10 +1,11 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { TLink } from '@/components/motion/RouteTransition';
 import { Magnetic } from '@/components/interaction/Magnetic';
 import { ScrambleText } from '@/components/interaction/ScrambleText';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useLiquidGlass } from '@/components/interaction/useLiquidGlass';
 import { useCv } from '@/lib/cv';
 import { useActiveSection } from '@/lib/hooks';
 import { isMac, usePalette } from '@/lib/palette';
@@ -26,11 +27,18 @@ export function Nav() {
   const { setOpen: openPalette } = usePalette();
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuLoaded, setMenuLoaded] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  useLiquidGlass(navRef, { radius: 24, rim: 1.1, blur: 3, saturate: 1.4 });
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-[var(--gutter)] pt-4">
-      <nav aria-label="Main" className="glass pointer-events-auto flex h-12 w-full max-w-[42rem] items-center justify-between gap-2 rounded-full pr-1.5 pl-5">
-        <TLink to="/" label="Index" className="font-mono text-sm font-medium tracking-tight" aria-label="Hritabrata Bardhan — home">
+      {/* Liquid glass (Nordify): no transform/opacity/filter here or on the header, or the refraction dies. */}
+      <nav
+        ref={navRef}
+        aria-label="Main"
+        className="nav-glass pointer-events-auto flex h-12 w-full max-w-[42rem] items-center justify-between gap-2 rounded-full pr-1.5 pl-5"
+      >
+        <TLink to="/" label="Index" transition="columns" className="font-mono text-sm font-medium tracking-tight" aria-label="Hritabrata Bardhan — home">
           HB
         </TLink>
 
@@ -40,6 +48,7 @@ export function Nav() {
               <TLink
                 to={`/#${link.id}`}
                 label={link.label}
+                transition="columns"
                 aria-current={active === link.id ? 'true' : undefined}
                 className={cn(
                   'relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground',

@@ -18,6 +18,9 @@ export function usePageAnimations<T extends HTMLElement>(key?: string) {
     document.fonts.ready.then(() => {
       if (cancelled) return;
       cleanup = initScrollAnimations(root);
+      // Section effects (pins, stacking cards) are created separately; order every
+      // trigger by page position so pin spacing is accounted for, then measure.
+      ScrollTrigger.sort();
       ScrollTrigger.refresh();
     });
 

@@ -30,7 +30,7 @@ export function MobileMenu({ open, onOpenChange, onHome }: { open: boolean; onOp
                 label={link.label}
                 onClick={(e) => {
                   e.preventDefault();
-                  closeThen(() => (onHome ? scrollToId(link.id) : go(`/#${link.id}`, link.label)));
+                  closeThen(() => (onHome ? scrollToId(link.id) : go(`/#${link.id}`, link.label, 'columns')));
                 }}
                 className="flex items-baseline justify-between py-4 text-h2"
               >

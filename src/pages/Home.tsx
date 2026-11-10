@@ -8,17 +8,19 @@ import { SelectedWork } from '@/sections/SelectedWork';
 import { Stack } from '@/sections/Stack';
 import { Contact } from '@/sections/Contact';
 import { Activity } from '@/sections/Activity';
+import { Manifesto } from '@/sections/Manifesto';
 import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Home() {
   const ref = usePageAnimations<HTMLDivElement>();
   usePageTitle();
   return (
-    <div ref={ref}>
+    <div ref={ref} data-page="/">
       <Nav />
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
+        <Manifesto />
         <Disciplines />
         <SelectedWork />
         <Stack />

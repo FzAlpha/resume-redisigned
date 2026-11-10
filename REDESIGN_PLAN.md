@@ -5,7 +5,8 @@ Status: **phases 1–8 built** on branch `redesign-minimal`. Not yet deployed.
 ### What changed from the original plan
 - **Decisions made:** no translation (visitors can use their browser's translate); the contact form keeps opening the visitor's mail app for now; default theme follows the visitor's system setting; accent is signal orange; untracked Blender/model/film assets were moved to `../resume-archive-cinematic/`.
 - **Education:** B.Tech CSE, ITER, Siksha 'O' Anusandhan, class of 2029.
-- **Liquid glass:** the WebGL library re-captures the content behind the glass, so it can't sit on a fixed nav over a scrolling page efficiently. The nav uses CSS frosted glass; the WebGL glass became a draggable lens over the hero name.
+- **Liquid glass:** replaced the WebGL library (it snapshots the DOM) with Nordify's css-liquid-glass (SVG displacement through `backdrop-filter`, refracts the live page) — on the nav pill and a draggable hero lens.
+- **Motion, round 2:** eight more scroll-effect types (pinned horizontal, stacking cards, scroll-linked text band, outline fill, letter scatter, velocity skew, clip reveal, expanding inverse Contact) and five page-transition styles (morph, slide, curtain, columns, zoom).
 - **Stats:** now live from a build-time GitHub/LeetCode snapshot instead of hand-typed numbers.
 - **Not done:** Rive monogram (needs a `.riv` authored in the Rive editor), mobile project carousel, translation, form backend.
 - **Bundle:** first load is ~173 KB gzip (React ≈66 + GSAP ≈43 are the floor). The original 120 KB target wasn't realistic for this feature set; everything else is lazy-loaded.

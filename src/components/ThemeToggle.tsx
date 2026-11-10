@@ -24,7 +24,9 @@ export function ThemeToggle() {
     const y = top + height / 2;
     const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
 
+    document.documentElement.dataset.vt = 'theme';
     const transition = document.startViewTransition(apply);
+    transition.finished.finally(() => delete document.documentElement.dataset.vt).catch(() => {});
     // If the browser can't snapshot (e.g. a throttled background tab), don't leave the theme stuck.
     const fallback = window.setTimeout(() => {
       transition.skipTransition();
