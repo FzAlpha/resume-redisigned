@@ -15,16 +15,11 @@ import { gsap, motionEnabled, ScrollTrigger } from '@/lib/motion';
  */
 
 // The ribbon's centre line, passed through a centripetal Catmull-Rom spline.
-// The waves either side are placed in fractions of the canvas width/height, so they stretch to fill
-// any screen. The knot is placed in units of the canvas *height* around the centre, so it keeps the
+// The waves either side are generated to fit the width (one swell per ~canvas-height), so a wide
+// screen gets more and deeper curves instead of a stretched, flat line. The knot is placed in units of the canvas *height* around the centre, so it keeps the
 // same tall, round shape on a phone and on a wide monitor (stretching it with the width flattens it).
 // It loops *above* the ribbon, and its turn stays wide relative to the band so the band never folds.
-const WAVE_IN: [number, number][] = [
-  [-0.06, 0.66],
-  [0.08, 0.6],
-  [0.2, 0.7],
-  [0.32, 0.64],
-];
+
 // [x offset from the centre in heights, y as a fraction of the height] — the phone-sized knot,
 // expressed in heights so every screen gets the same shape.
 const KNOT: [number, number][] = [
@@ -36,21 +31,35 @@ const KNOT: [number, number][] = [
   [-0.083, 0.44],
   [0.055, 0.62],
 ];
-const WAVE_OUT: [number, number][] = [
-  [0.66, 0.7],
-  [0.8, 0.6],
-  [0.92, 0.66],
-  [1.06, 0.6],
-];
+
+
+// Swing pattern for the waves (+ is up), varied so it never looks mechanical.
+const SWING = [0.85, -0.7, 1, -0.55, 0.8, -0.9, 0.65, -0.8];
+const MID = 0.62; // the ribbon's resting height, where it meets the knot
+
+/** Waves between x0 and x1: one swell per ~canvas-height, so wide screens get more, deeper curves. */
+function waves(x0: number, x1: number, w: number, h: number, offset: number): Pt[] {
+  const span = x1 - x0;
+  const count = Math.max(1, Math.round(span / (h * 0.62)));
+  const amp = h * (w / h > 2 ? 0.24 : 0.16); // deeper on wide screens, gentler on phones
+  const pts: Pt[] = [];
+  for (let i = 0; i < count; i++) {
+    const x = x0 + (span * i) / count;
+    pts.push({ x, y: MID * h - amp * SWING[(i + offset) % SWING.length] });
+  }
+  return pts;
+}
 
 const spinePoints = (w: number, h: number) => {
-  // Keep the approach points clear of the knot on narrow screens.
-  const knotLeft = 0.5 * w + KNOT.reduce((m, [dx]) => Math.min(m, dx), 0) * h;
-  const knotRight = 0.5 * w + KNOT.reduce((m, [dx]) => Math.max(m, dx), 0) * h;
+  const knot = KNOT.map(([dx, y]) => ({ x: 0.5 * w + dx * h, y: y * h }));
+  const knotLeft = Math.min(...knot.map((p) => p.x));
+  const knotRight = Math.max(...knot.map((p) => p.x));
+  const gap = h * 0.22; // clear air between the waves and the knot
   return [
-    ...WAVE_IN.map(([x, y]) => ({ x: Math.min(x * w, knotLeft - h * 0.12), y: y * h })),
-    ...KNOT.map(([dx, y]) => ({ x: 0.5 * w + dx * h, y: y * h })),
-    ...WAVE_OUT.map(([x, y]) => ({ x: Math.max(x * w, knotRight + h * 0.12), y: y * h })),
+    ...waves(-0.06 * w, knotLeft - gap, w, h, 0),
+    ...knot,
+    ...waves(knotRight + gap, 1.06 * w, w, h, 1),
+    { x: 1.08 * w, y: MID * h - h * 0.08 },
   ];
 };
 const SAMPLES = 1100;
@@ -246,7 +255,7 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
       <canvas
         ref={canvas}
         aria-hidden
-        className="h-[clamp(14rem,42vh,26rem)] w-full"
+        className="h-[clamp(14rem,48vh,32rem)] w-full"
         style={direction === 'reverse' ? { transform: 'scaleX(-1)' } : undefined}
       />
       <p className="mt-6 flex items-center gap-3 font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase">
