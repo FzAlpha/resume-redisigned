@@ -10,6 +10,7 @@ import { Contact } from '@/sections/Contact';
 import { Activity } from '@/sections/Activity';
 import { Manifesto } from '@/sections/Manifesto';
 import { Prologue } from '@/sections/Prologue';
+import { Interlude } from '@/sections/Interlude';
 import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Home() {
@@ -21,9 +22,11 @@ export function Home() {
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
         <Prologue />
+        <Interlude direction="forward" label="Scroll to trace the signal" />
         <About />
         <Manifesto />
         <Disciplines />
+        <Interlude direction="reverse" label="Analog in, digital out" />
         <SelectedWork />
         <Stack />
         <Activity />

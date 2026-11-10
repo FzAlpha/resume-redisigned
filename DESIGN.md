@@ -15,7 +15,7 @@ Light only: there is no dark mode. The one dark surface is the inverse Contact i
 The page background changes as you scroll. Each section declares a palette (`data-journey`), and
 `src/lib/journey.ts` blends the five base colours between neighbouring sections onto `<html>` while the next
 section's top travels from 85% to 30% of the viewport. Pinned sections hold their colour for the whole pin, so a
-section can play its scroll animation *before* the colour changes (the Prologue does this). The page moves through three colours once, top to bottom: green, then lavender, then blue. Every other token is
+section can play its scroll animation *before* the colour changes (the Prologue does this). The page moves through three colours once, top to bottom: green, then lavender, then blue. Each change is preceded by a pinned ribbon interlude that draws a twisting ribbon horizontally across the screen; the colour turns only after it completes. Every other token is
 `color-mix()`ed from the five, so cards, hairlines and inputs follow automatically.
 
 | Palette | Paper / ink | Where |

@@ -37,7 +37,7 @@ All text lives in `src/content/`:
 ```
 src/
   content/                 all copy + activity snapshot
-  sections/                home-page sections (Hero, Prologue, About, Manifesto, Disciplines, SelectedWork, Stack, Activity, Contact)
+  sections/                home-page sections (Hero, Prologue, Interlude, About, Manifesto, Disciplines, SelectedWork, Stack, Activity, Contact)
   pages/                   Home, Work (/work/:slug, lazy), NotFound
   components/ui/           shadcn/ui primitives (hand-copied, styled to DESIGN.md)
   components/site/         Nav, Footer, CV sheet, ⌘K palette, mobile menu, contribution grid…
@@ -70,6 +70,9 @@ The background changes colour as you scroll (`src/lib/journey.ts`). Give a secti
 and the page blends into that palette as the section arrives; palettes live in `journeys` (light only; there is no dark mode). Every
 token is mixed from five base colours, so the whole UI follows. Pinned sections hold their colour for the whole pin: the
 **Prologue** (`sections/Prologue.tsx`) pins on the hero's green and lights up its statement word by word before the page turns lavender.
+Before each colour change a **ribbon interlude** (`sections/Interlude.tsx`) pins and draws a twisting ribbon across the full
+width as you scroll (canvas): one smooth curve with a knot looping above it, tapered ends, lit front and darker back faces, in the
+section's accent colour, with a hex counter running 0x00 → 0xFF (left to right before lavender, right to left before blue). It has no palette of its own, so the new colour only arrives once it releases.
 Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`.
 
 Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for
