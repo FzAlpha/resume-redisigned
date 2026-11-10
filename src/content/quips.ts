@@ -6,6 +6,7 @@ export const quips = {
   about: 'I use Arch, btw.',
   work: 'Debugged by sheer will (and a lot of GDB).',
   stack: 'No Electron apps were harmed in the making of this stack.',
+  activity: 'Green squares are my love language. Mine are orange.',
   contact: {
     heading: { lead: "Let's build", emphasis: 'something.' },
     line: "I'll bring the pointers, you bring the problem.",
@@ -13,7 +14,7 @@ export const quips = {
   },
   toast: {
     copied: 'Copied. Ctrl+C never felt so good.',
-    sent: 'Message queued — no race conditions, promise.',
+    sent: 'Opening your mail app — hit send and you’re in my queue. No race conditions, promise.',
   },
   footer: 'Compiled with -O3 and a lot of chai.',
   notFound: 'This pointer is dangling. Let me take you home.',

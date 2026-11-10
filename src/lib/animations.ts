@@ -70,6 +70,15 @@ export function initScrollAnimations(root: HTMLElement) {
       );
     }
 
+    // ── Bars: grow from the left (activity BarList) ──────────────
+    for (const el of q('[data-grow]')) {
+      gsap.fromTo(
+        el,
+        { scaleX: 0, transformOrigin: 'left center' },
+        { scaleX: 1, duration: 1.2, ease: ease.out, scrollTrigger: enter(el, 'top 92%') },
+      );
+    }
+
     // ── Numbers: count up ────────────────────────────────────────
     for (const el of q('[data-count]')) {
       const target = Number(el.dataset.count);

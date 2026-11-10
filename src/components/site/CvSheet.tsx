@@ -66,7 +66,12 @@ export function CvSheet() {
 
         <Block title="Education">
           <p className="font-medium">{education.degree}</p>
-          {education.institution && <p>{education.institution}</p>}
+          {education.institution && (
+            <p>
+              {education.institution}
+              {education.graduation && <span className="text-muted-foreground"> · Expected {education.graduation}</span>}
+            </p>
+          )}
           <p className="text-muted-foreground">Focus: {education.focus}</p>
         </Block>
 

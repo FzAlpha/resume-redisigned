@@ -10,6 +10,7 @@ import { TLink } from '@/components/motion/RouteTransition';
 import { usePageAnimations } from '@/components/motion/usePageAnimations';
 import { projects } from '@/content/projects';
 import { NotFound } from './NotFound';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Work() {
   const { slug } = useParams();
@@ -23,6 +24,7 @@ function CaseStudy({ index }: { index: number }) {
   const ref = usePageAnimations<HTMLDivElement>();
   const project = projects[index];
   const next = projects[(index + 1) % projects.length];
+  usePageTitle(project.title);
 
   const facts = [
     { k: 'Category', v: project.category },
@@ -41,7 +43,7 @@ function CaseStudy({ index }: { index: number }) {
   return (
     <div ref={ref}>
       <Nav />
-      <main className="container-x pt-32">
+      <main id="main" tabIndex={-1} className="container-x pt-32 outline-none">
         <TLink
           to="/#work"
           label="Selected work"

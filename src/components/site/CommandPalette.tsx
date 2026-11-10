@@ -21,6 +21,7 @@ import { contactLinks, email } from '@/content/contact';
 import { projects } from '@/content/projects';
 import { quips } from '@/content/quips';
 import { useCv } from '@/lib/cv';
+import { toastSuccess } from '@/lib/celebrate';
 import { usePalette } from '@/lib/palette';
 import { scrollToId } from '@/lib/scroll';
 import { useTheme } from '@/lib/theme';
@@ -79,7 +80,7 @@ export function CommandPalette() {
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(email);
-      toast(quips.toast.copied);
+      toastSuccess(quips.toast.copied);
     } catch {
       toast(`Copy failed — it's ${email}`);
     }

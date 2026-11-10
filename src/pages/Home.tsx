@@ -7,18 +7,22 @@ import { Disciplines } from '@/sections/Disciplines';
 import { SelectedWork } from '@/sections/SelectedWork';
 import { Stack } from '@/sections/Stack';
 import { Contact } from '@/sections/Contact';
+import { Activity } from '@/sections/Activity';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Home() {
   const ref = usePageAnimations<HTMLDivElement>();
+  usePageTitle();
   return (
     <div ref={ref}>
       <Nav />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
         <Disciplines />
         <SelectedWork />
         <Stack />
+        <Activity />
         <Contact />
       </main>
       <Footer />

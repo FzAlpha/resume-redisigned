@@ -9,11 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { contactLinks, email } from '@/content/contact';
 import { quips } from '@/content/quips';
+import { confettiFrom, toastSuccess } from '@/lib/celebrate';
 
 async function copy(text: string) {
   try {
     await navigator.clipboard.writeText(text);
-    toast(quips.toast.copied);
+    toastSuccess(quips.toast.copied);
   } catch {
     toast(`Copy failed — it's ${text}`);
   }
@@ -33,17 +34,18 @@ export function Contact() {
     setErrors(next);
     if (next.name || next.email) return;
 
-    // Decision pending: mailto vs. a form backend (REDESIGN_PLAN.md §8.5).
+    // Hands off to the visitor's mail app (a form backend can replace this later).
     const subject = encodeURIComponent(`Hello from ${name}`);
     const body = encodeURIComponent(`${message}\n\n— ${name} (${from})`);
     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-    toast(quips.toast.sent);
+    toastSuccess(quips.toast.sent);
+    confettiFrom(e.currentTarget.querySelector('button[type="submit"]'));
     e.currentTarget.reset();
   }
 
   return (
     <section id="contact" className="container-x scroll-mt-20 pb-[clamp(4rem,10vw,8rem)]">
-      <SectionHeader index="05" label="Contact" aside={quips.contact.uptime} />
+      <SectionHeader index="06" label="Contact" aside={quips.contact.uptime} />
 
       <h2 data-split className="text-display mt-[clamp(3rem,6vw,5rem)] text-[clamp(3rem,10vw,10rem)]">
         {quips.contact.heading.lead} <em className="serif">{quips.contact.heading.emphasis}</em>
@@ -100,11 +102,34 @@ export function Contact() {
           <p className="text-label text-muted-foreground">Or leave a message</p>
           <label className="flex flex-col gap-1">
             <span className="sr-only">Name</span>
-            <Input name="name" placeholder="Your name" autoComplete="name" aria-invalid={errors.name || undefined} />
+            <Input
+              name="name"
+              placeholder="Your name"
+              autoComplete="name"
+              aria-invalid={errors.name || undefined}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+            />
+            {errors.name && (
+              <span id="name-error" className="font-mono text-xs text-destructive">
+                A name, please — even a handle works.
+              </span>
+            )}
           </label>
           <label className="flex flex-col gap-1">
             <span className="sr-only">Email</span>
-            <Input name="email" type="email" placeholder="you@domain.com" autoComplete="email" aria-invalid={errors.email || undefined} />
+            <Input
+              name="email"
+              type="email"
+              placeholder="you@domain.com"
+              autoComplete="email"
+              aria-invalid={errors.email || undefined}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+            />
+            {errors.email && (
+              <span id="email-error" className="font-mono text-xs text-destructive">
+                That email doesn’t parse. Mind checking it?
+              </span>
+            )}
           </label>
           <label className="flex flex-col gap-1">
             <span className="sr-only">Message</span>

@@ -5,7 +5,11 @@ import { quips } from '@/content/quips';
 export function About() {
   return (
     <section id="about" className="container-x scroll-mt-20 py-[clamp(6rem,14vw,12rem)]">
-      <SectionHeader index="01" label="About" aside={profile.education.degree} />
+      <SectionHeader
+        index="01"
+        label="About"
+        aside={`B.Tech CSE · ${profile.education.institution} · Class of ${profile.education.graduation}`}
+      />
 
       <div className="mt-[clamp(3rem,6vw,5rem)] grid gap-12 md:grid-cols-12 md:gap-6">
         <div className="md:col-span-8">
@@ -13,7 +17,7 @@ export function About() {
             {profile.statement}
           </p>
 
-          <dl data-stagger className="mt-[clamp(3rem,6vw,5rem)] grid grid-cols-2 gap-6 md:max-w-xl">
+          <dl data-stagger className="mt-[clamp(3rem,6vw,5rem)] grid grid-cols-2 gap-6 sm:grid-cols-3">
             {profile.stats.map((s) => (
               <div key={s.label} className="border-t pt-4">
                 <dd className="font-mono text-[clamp(2.5rem,5vw,4rem)] leading-none font-light tracking-tight tabular-nums">

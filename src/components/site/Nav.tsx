@@ -1,23 +1,19 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useLocation } from 'react-router';
 
-import { TLink, useRouteTransition } from '@/components/motion/RouteTransition';
+import { TLink } from '@/components/motion/RouteTransition';
 import { Magnetic } from '@/components/interaction/Magnetic';
 import { ScrambleText } from '@/components/interaction/ScrambleText';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useCv } from '@/lib/cv';
 import { useActiveSection } from '@/lib/hooks';
 import { isMac, usePalette } from '@/lib/palette';
-import { scrollToId } from '@/lib/scroll';
 import { cn } from '@/lib/utils';
+import { navLinks } from './nav-links';
 
-export const navLinks = [
-  { id: 'about', label: 'About' },
-  { id: 'work', label: 'Work' },
-  { id: 'stack', label: 'Stack' },
-  { id: 'contact', label: 'Contact' },
-] as const;
+export { navLinks };
+
+const MobileMenu = lazy(() => import('./MobileMenu').then((m) => ({ default: m.MobileMenu })));
 
 const sectionIds = navLinks.map((l) => l.id);
 const noSections: string[] = [];
@@ -29,7 +25,7 @@ export function Nav() {
   const { setOpen: openCv } = useCv();
   const { setOpen: openPalette } = usePalette();
   const [menuOpen, setMenuOpen] = useState(false);
-  const go = useRouteTransition();
+  const [menuLoaded, setMenuLoaded] = useState(false);
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-[var(--gutter)] pt-4">
@@ -80,63 +76,24 @@ export function Nav() {
             </button>
           </Magnetic>
 
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                aria-label="Open menu"
-                className="inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background md:hidden"
-              >
-                Menu
-              </button>
-            </SheetTrigger>
-            <SheetContent side="top" className="rounded-b-2xl border-b px-[var(--gutter)] pt-20 pb-8">
-              <SheetTitle className="sr-only">Menu</SheetTitle>
-              <SheetDescription className="sr-only">Site navigation</SheetDescription>
-              <ul className="flex flex-col">
-                {navLinks.map((link, i) => (
-                  <li key={link.id} className="border-t last:border-b">
-                    <TLink
-                      to={`/#${link.id}`}
-                      label={link.label}
-                      onClick={(e) => {
-                        // Close the sheet first; scrolling is locked until it has gone.
-                        e.preventDefault();
-                        setMenuOpen(false);
-                        window.setTimeout(() => (onHome ? scrollToId(link.id) : go(`/#${link.id}`, link.label)), 380);
-                      }}
-                      className="flex items-baseline justify-between py-4 text-h2"
-                    >
-                      {link.label}
-                      <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
-                    </TLink>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    openCv(true);
-                  }}
-                  className="h-12 rounded-full bg-foreground text-sm font-medium text-background"
-                >
-                  View CV
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    window.setTimeout(() => openPalette(true), 380);
-                  }}
-                  className="h-12 rounded-full border border-foreground/15 font-mono text-sm"
-                >
-                  &gt;_ Terminal
-                </button>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <button
+            type="button"
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            aria-haspopup="dialog"
+            onClick={() => {
+              setMenuLoaded(true);
+              setMenuOpen(true);
+            }}
+            className="inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background md:hidden"
+          >
+            Menu
+          </button>
+          {menuLoaded && (
+            <Suspense fallback={null}>
+              <MobileMenu open={menuOpen} onOpenChange={setMenuOpen} onHome={onHome} />
+            </Suspense>
+          )}
         </div>
       </nav>
     </header>

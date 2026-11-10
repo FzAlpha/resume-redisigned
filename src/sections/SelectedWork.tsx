@@ -1,14 +1,20 @@
-import { useRef } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 import { TLink } from '@/components/motion/RouteTransition';
-import { WorkPreview } from '@/components/interaction/WorkPreview';
+import { motionEnabled } from '@/lib/motion';
+
+// Desktop-only nicety (pulls in Motion), so it's fetched only where it can run.
+const WorkPreview = lazy(() => import('@/components/interaction/WorkPreview').then((m) => ({ default: m.WorkPreview })));
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { projects } from '@/content/projects';
 import { quips } from '@/content/quips';
 
 export function SelectedWork() {
   const listRef = useRef<HTMLOListElement>(null);
+  const [canPreview] = useState(
+    () => motionEnabled() && window.matchMedia('(pointer: fine) and (min-width: 768px)').matches,
+  );
 
   return (
     <section id="work" className="container-x scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
@@ -50,7 +56,11 @@ export function SelectedWork() {
           </li>
         ))}
       </ol>
-      <WorkPreview listRef={listRef} />
+      {canPreview && (
+        <Suspense fallback={null}>
+          <WorkPreview listRef={listRef} />
+        </Suspense>
+      )}
     </section>
   );
 }

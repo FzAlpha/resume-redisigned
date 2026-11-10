@@ -5,6 +5,15 @@ import { ease, gsap, motionEnabled, nextFrame } from '@/lib/motion';
 import { scrollToId, scrollToTop } from '@/lib/scroll';
 
 type Go = (to: string, label?: string) => void;
+
+/** Same specifier as the lazy() route in App.tsx, so the module cache is shared. */
+const preloadRoute = (to: string) => (to.startsWith('/work/') ? import('@/pages/Work').catch(() => {}) : Promise.resolve());
+
+// Warm the case-study chunk once the browser is idle.
+if (typeof window !== 'undefined') {
+  const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 2500));
+  idle(() => preloadRoute('/work/'));
+}
 const TransitionContext = createContext<Go | null>(null);
 
 /** Curtain wipe between routes: rises over the page, shows where you're going, then lifts. */
@@ -23,11 +32,15 @@ export function RouteTransitionProvider({ children }: { children: ReactNode }) {
       }
       busy.current = true;
       setLabel(nextLabel ?? '');
-      await gsap.fromTo(
-        el,
-        { clipPath: 'inset(100% 0% 0% 0%)', visibility: 'visible' },
-        { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: ease.inOut },
-      );
+      // Fetch the destination's code while the curtain is coming down, so it never lifts on a blank page.
+      await Promise.all([
+        gsap.fromTo(
+          el,
+          { clipPath: 'inset(100% 0% 0% 0%)', visibility: 'visible' },
+          { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: ease.inOut },
+        ),
+        preloadRoute(to),
+      ]);
       navigate(to);
       await nextFrame();
       await nextFrame();

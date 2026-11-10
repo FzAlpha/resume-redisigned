@@ -14,10 +14,10 @@ export const terminalCommands: TerminalCommand[] = [
     description: 'Personal summary & background',
     output: () => [
       `${profile.name.first} ${profile.name.last} (${profile.handle})`,
-      '• Computer Science Engineering student',
+      `• B.Tech CSE at ${profile.education.institution} (class of ${profile.education.graduation})`,
       '• Low-level systems programming in C++ / POSIX',
       '• Operating-system internals & custom Linux shells',
-      '• 200+ LeetCode & algorithmic problems solved',
+      `• ${profile.stats[0].value}${profile.stats[0].suffix} LeetCode problems solved`,
     ],
   },
   {

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 
 import { LiquidLens } from '@/components/interaction/LiquidLens';
+import { HeroField } from '@/components/interaction/HeroField';
 import { profile } from '@/content/profile';
 import { quips } from '@/content/quips';
 import { useLocalTime } from '@/lib/hooks';
@@ -51,6 +52,7 @@ export function Hero() {
     >
       {/* Background as a real child: the glass lens refracts the section's children, never the section itself. */}
       <div aria-hidden className="absolute inset-0 -z-10 bg-background" />
+      <HeroField className="-z-10" />
       <LiquidLens className="top-[38%] right-[12%]" />
       <p data-hero-fade className="font-mono text-xs text-muted-foreground">
         <span className="text-signal">●</span> {quips.hero}

@@ -1,5 +1,8 @@
 // Single source of truth for all site copy. Components never hard-code text.
-// TODO(content): location, university, graduation year, availability — ask Hritabrata.
+// TODO(content): location and availability — not provided yet, so they're left out of the UI.
+
+import activity from './activity.json';
+export { activity };
 
 export const profile = {
   name: { first: 'Hritabrata', last: 'Bardhan' },
@@ -14,14 +17,16 @@ export const profile = {
   education: {
     degree: 'B.Tech, Computer Science & Engineering',
     focus: 'Data Structures, Algorithms, Operating Systems, Systems Architecture',
-    institution: null as string | null,
-    graduation: null as string | null,
+    institution: "ITER, Siksha 'O' Anusandhan",
+    graduation: '2029',
   },
   availability: null as string | null,
   portrait: '/images/portrait.jpg',
+  // Live numbers from the build-time snapshot (scripts/fetch-activity.mjs), with safe fallbacks.
   stats: [
-    { value: 200, suffix: '+', label: 'DSA problems solved' },
-    { value: 10, suffix: '+', label: 'Public repositories' },
+    { value: activity.leetcode?.solved ?? 200, suffix: activity.leetcode ? '' : '+', label: 'LeetCode problems solved' },
+    { value: activity.github?.total ?? 0, suffix: '', label: 'GitHub contributions this year' },
+    { value: activity.github?.repos ?? 10, suffix: activity.github ? '' : '+', label: 'Public repositories' },
   ],
 } as const;
 

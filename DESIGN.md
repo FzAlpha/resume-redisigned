@@ -69,4 +69,4 @@ Under `prefers-reduced-motion`, everything becomes opacity-only and smooth scrol
 - ✅ Whitespace before decoration · one idea per viewport · real content over lorem ipsum
 - ✅ Hairlines, mono labels, tabular numbers
 - ❌ Drop shadows on cards · gradients · glows · emoji in UI · more than one accent · stock 3D
-- ❌ Animations that loop forever (the marquee is the only exception, and it pauses on hover)
+- ❌ Animations that loop forever. Sanctioned exceptions: the stack marquee (pauses on hover), the hero contour field (very low contrast, paused off-screen), the terminal caret, and the CV border beam (hover only)
