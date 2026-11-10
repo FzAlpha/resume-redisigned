@@ -10,3 +10,6 @@ blender/frames/
 blender/frames_v/
 blender/render*.log
 *.blend1
+
+# Vercel CLI link data
+.vercel/
