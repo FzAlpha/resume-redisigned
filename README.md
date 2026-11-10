@@ -97,15 +97,13 @@ Add `?intro` to the URL to replay the preloader.
 
 `src/vendor/liquid-glass/` is [nordify/css-liquid-glass](https://github.com/nordify/css-liquid-glass) (MIT), vendored
 unmodified and wrapped by `components/interaction/useLiquidGlass.ts`. Used on the nav pill and the draggable hero lens.
-Inside the nav pill, the links are React Bits' **Pill Nav** (`src/vendor/react-bits/PillNav.tsx`) with its own surface off, so the
-liquid glass is the only glass: a green highlight glides between links, a dot marks the active section.
 Chromium refracts; Safari/Firefox get frosted glass. Never put `transform`, `opacity`, `filter`, `isolation`,
 `will-change` or `overflow:hidden` on a glass element or its ancestors.
 
 ## Libraries
 
 GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk ·
-css-liquid-glass (vendored) · React Bits Antigravity + Tech Text + Pill Nav (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
+css-liquid-glass (vendored) · React Bits Antigravity + Tech Text (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
 ## Deploy
