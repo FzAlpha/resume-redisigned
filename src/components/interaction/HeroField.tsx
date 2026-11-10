@@ -54,6 +54,10 @@ export function HeroField({ className }: { className?: string }) {
             waveCount={3}
             lerpSpeed={0.05}
             particleShape="sphere"
+            // Each dot slowly swells and shrinks on its own phase (some grow while others shrink):
+            // one full cycle every ~8s, size ±50%.
+            pulseSpeed={0.8}
+            particleVariance={2.2}
             colorMode="conic"
             colorSpeed={0.04}
             ambient={0} // dots away from the ring are invisible; only the ring shows

@@ -14,27 +14,45 @@ import { gsap, motionEnabled, ScrollTrigger } from '@/lib/motion';
  * `direction="reverse"` mirrors it (drawn right to left).
  */
 
-// The ribbon's centre line, as points in a unit box (x across, y down), passed through a
-// centripetal Catmull-Rom spline. The knot around x≈0.5 loops *above* the ribbon; its turn is
-// kept wide relative to the band so the band never folds over itself.
-const SPINE: [number, number][] = [
+// The ribbon's centre line, passed through a centripetal Catmull-Rom spline.
+// The waves either side are placed in fractions of the canvas width/height, so they stretch to fill
+// any screen. The knot is placed in units of the canvas *height* around the centre, so it keeps the
+// same tall, round shape on a phone and on a wide monitor (stretching it with the width flattens it).
+// It loops *above* the ribbon, and its turn stays wide relative to the band so the band never folds.
+const WAVE_IN: [number, number][] = [
   [-0.06, 0.66],
   [0.08, 0.6],
   [0.2, 0.7],
   [0.32, 0.64],
-  [0.44, 0.6],
-  // the knot: rises, turns over the top, comes down and crosses its own path
-  [0.54, 0.46],
-  [0.57, 0.26],
-  [0.5, 0.14],
-  [0.42, 0.24],
-  [0.44, 0.44],
-  [0.54, 0.62],
+];
+// [x offset from the centre in heights, y as a fraction of the height] — the phone-sized knot,
+// expressed in heights so every screen gets the same shape.
+const KNOT: [number, number][] = [
+  [-0.083, 0.6],
+  [0.055, 0.46],
+  [0.096, 0.26],
+  [0, 0.13],
+  [-0.11, 0.24],
+  [-0.083, 0.44],
+  [0.055, 0.62],
+];
+const WAVE_OUT: [number, number][] = [
   [0.66, 0.7],
   [0.8, 0.6],
   [0.92, 0.66],
   [1.06, 0.6],
 ];
+
+const spinePoints = (w: number, h: number) => {
+  // Keep the approach points clear of the knot on narrow screens.
+  const knotLeft = 0.5 * w + KNOT.reduce((m, [dx]) => Math.min(m, dx), 0) * h;
+  const knotRight = 0.5 * w + KNOT.reduce((m, [dx]) => Math.max(m, dx), 0) * h;
+  return [
+    ...WAVE_IN.map(([x, y]) => ({ x: Math.min(x * w, knotLeft - h * 0.12), y: y * h })),
+    ...KNOT.map(([dx, y]) => ({ x: 0.5 * w + dx * h, y: y * h })),
+    ...WAVE_OUT.map(([x, y]) => ({ x: Math.max(x * w, knotRight + h * 0.12), y: y * h })),
+  ];
+};
 const SAMPLES = 1100;
 const TWISTS = 2.75;
 
@@ -126,9 +144,9 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
       cv.width = Math.round(w * dpr);
       cv.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const pts = SPINE.map(([x, y]) => ({ x: x * w, y: y * h }));
+      const pts = spinePoints(w, h);
       spine = even(spline(pts, SAMPLES), SAMPLES);
-      base = Math.min(h * 0.08, 28);
+      base = Math.min(h * 0.05, w * 0.05, 22); // band:knot ratio is the same on every screen, so the knot stays open
 
       const last = spine.length - 1;
       left = [];
