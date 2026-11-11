@@ -1,21 +1,9 @@
-import { lazy, Suspense, useRef, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-
-import { TLink } from '@/components/motion/RouteTransition';
-import { motionEnabled } from '@/lib/motion';
-
-// Desktop-only nicety (pulls in Motion), so it's fetched only where it can run.
-const WorkPreview = lazy(() => import('@/components/interaction/WorkPreview').then((m) => ({ default: m.WorkPreview })));
+import { WorkShowcase } from '@/components/interaction/WorkShowcase';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { projects } from '@/content/projects';
 import { quips } from '@/content/quips';
 
 export function SelectedWork() {
-  const listRef = useRef<HTMLOListElement>(null);
-  const [canPreview] = useState(
-    () => motionEnabled() && window.matchMedia('(pointer: fine) and (min-width: 768px)').matches,
-  );
-
   return (
     <section id="work" data-journey="fog" className="container-x scroll-mt-20 pb-[clamp(6rem,14vw,12rem)]">
       <SectionHeader index="03" label="Selected work" aside={`${String(projects.length).padStart(2, '0')} projects`} />
@@ -26,44 +14,7 @@ export function SelectedWork() {
         <p className="max-w-xs font-mono text-xs text-muted-foreground md:text-right">{quips.work}</p>
       </div>
 
-      <ol ref={listRef} data-stagger className="group/list mt-[clamp(3rem,6vw,5rem)]">
-        {projects.map((p, i) => (
-          <li key={p.slug} className="border-t last:border-b">
-            <TLink
-              to={`/work/${p.slug}`}
-              label={p.title}
-              data-preview={i}
-              data-cursor="View"
-              className="group grid grid-cols-12 items-baseline gap-x-4 gap-y-2 py-6 transition-opacity duration-500 md:py-9 md:group-hover/list:opacity-40 md:hover:opacity-100!"
-            >
-              <span className="col-span-2 font-mono text-sm text-muted-foreground tabular-nums md:col-span-1">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                className="col-span-9 text-h2 transition-transform duration-500 ease-out-expo group-hover:translate-x-2 md:col-span-5"
-                style={{ viewTransitionName: `vt-title-${p.slug}` }}
-              >
-                {p.title}
-              </span>
-              <ArrowUpRight
-                aria-hidden
-                className="col-span-1 size-5 self-center justify-self-end text-muted-foreground transition-[transform,color] duration-500 ease-out-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-signal md:order-last"
-              />
-              <span className="col-span-10 col-start-3 text-sm text-muted-foreground md:col-span-3 md:col-start-auto">
-                {p.category}
-              </span>
-              <span className="hidden text-sm text-muted-foreground md:col-span-2 md:block md:text-right">
-                {p.tags.slice(0, 2).join(' · ')}
-              </span>
-            </TLink>
-          </li>
-        ))}
-      </ol>
-      {canPreview && (
-        <Suspense fallback={null}>
-          <WorkPreview listRef={listRef} />
-        </Suspense>
-      )}
+      <WorkShowcase />
     </section>
   );
 }

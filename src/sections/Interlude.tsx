@@ -133,10 +133,17 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
     const ctx = cv.getContext('2d');
     if (!ctx) return;
 
+    // The ribbon is painted into an offscreen buffer a few slices at a time: each frame only adds the slices
+    // the scroll has uncovered since the last one, so a fast fling on a phone costs a few fills, not 1100.
+    const buf = document.createElement('canvas');
+    const bctx = buf.getContext('2d');
+    if (!bctx) return;
+
     let w = 0;
     let h = 0;
     let spine: Pt[] = [];
     let progress = motionEnabled() ? 0 : 1;
+    let drawn = 0; // slices already in the buffer
 
     // Per-sample geometry, rebuilt on resize: edge points either side of the spine, and shading.
     let left: Pt[] = [];
@@ -145,14 +152,43 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
     let broad: number[] = [];
     let base = 20;
 
+    // Colours, read from the live palette only when it can have changed (layout, entering the pin),
+    // never per frame: getComputedStyle mid-fling is what made phones stutter.
+    let fills: string[] = [];
+    let glow = [255, 255, 255];
+    let paletteKey = '';
+    const readColors = () => {
+      // The section's text colour is the accent (text-accent-ink); the page colour is on <html>.
+      const accentCss = getComputedStyle(el).color;
+      const paperCss = getComputedStyle(document.documentElement).backgroundColor;
+      const key = accentCss + paperCss;
+      if (key === paletteKey && fills.length === spine.length) return false;
+      paletteKey = key;
+      const accent = rgb(accentCss);
+      const paper = rgb(paperCss);
+      const lit = mix(accent, [255, 255, 255], 0.5);
+      const deep = mix(accent, [0, 0, 0], 0.2);
+      const back = mix(accent, paper, 0.5);
+      glow = lit;
+      fills = spine.map((_, i) => {
+        const front = mix(deep, lit, broad[i] ** 0.8 * 0.85);
+        const rear = mix(back, deep, 0.2 + broad[i] * 0.3);
+        const c = mix(rear, front, facing[i] * facing[i] * (3 - 2 * facing[i]));
+        return `rgb(${c[0]} ${c[1]} ${c[2]})`;
+      });
+      drawn = 0; // repaint in the new colours
+      return true;
+    };
+
     const layout = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const rect = cv.getBoundingClientRect();
       w = Math.max(1, rect.width);
       h = Math.max(1, rect.height);
-      cv.width = Math.round(w * dpr);
-      cv.height = Math.round(h * dpr);
+      cv.width = buf.width = Math.round(w * dpr);
+      cv.height = buf.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const pts = spinePoints(w, h);
       spine = even(spline(pts, SAMPLES), SAMPLES);
       base = Math.min(h * 0.05, w * 0.05, 22); // band:knot ratio is the same on every screen, so the knot stays open
@@ -180,38 +216,37 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
         facing.push(Math.min(1, Math.max(0, (s + 0.35) / 0.7))); // 0 = back face, 1 = front face, eased across the turn
         broad.push(Math.abs(Math.cos(phi))); // broad-on faces catch the most light
       }
+      paletteKey = '';
+      readColors();
       render();
     };
 
     const render = () => {
-      ctx.clearRect(0, 0, w, h);
       const n = Math.floor(progress * (spine.length - 1));
-      if (n < 1) return;
-      // Colours from the live palette. The section's text colour is the accent (text-accent-ink);
-      // the page colour is on <html>.
-      const accent = rgb(getComputedStyle(el).color);
-      const paper = rgb(getComputedStyle(document.documentElement).backgroundColor);
-      const lit = mix(accent, [255, 255, 255], 0.5);
-      const deep = mix(accent, [0, 0, 0], 0.2);
-      const back = mix(accent, paper, 0.5);
-
-      for (let i = 0; i < n; i++) {
+      // Scrolling back up un-draws: start the buffer again (rare, and at most one full pass).
+      if (n < drawn) drawn = 0;
+      if (drawn === 0) bctx.clearRect(0, 0, w, h);
+      // Redo the last two slices too, since the newest one was cut short at the old end.
+      for (let i = Math.max(0, drawn - 2); i < n; i++) {
         // Each quad spans two samples, so neighbours overlap and no seam ever shows.
         const j = Math.min(n, i + 2);
-        const front = mix(deep, lit, broad[i] ** 0.8 * 0.85);
-        const rear = mix(back, deep, 0.2 + broad[i] * 0.3);
-        const c = mix(rear, front, facing[i] * facing[i] * (3 - 2 * facing[i]));
-        ctx.fillStyle = `rgb(${c[0]} ${c[1]} ${c[2]})`;
-        ctx.beginPath();
-        ctx.moveTo(left[i].x, left[i].y);
-        ctx.lineTo(left[j].x, left[j].y);
-        ctx.lineTo(right[j].x, right[j].y);
-        ctx.lineTo(right[i].x, right[i].y);
-        ctx.closePath();
-        ctx.fill();
+        bctx.fillStyle = fills[i];
+        bctx.beginPath();
+        bctx.moveTo(left[i].x, left[i].y);
+        bctx.lineTo(left[j].x, left[j].y);
+        bctx.lineTo(right[j].x, right[j].y);
+        bctx.lineTo(right[i].x, right[i].y);
+        bctx.closePath();
+        bctx.fill();
       }
+      drawn = n;
+
+      ctx.clearRect(0, 0, w, h);
+      if (n < 1) return;
+      ctx.drawImage(buf, 0, 0, w, h);
       // A soft glow at the drawing end while it's still moving.
       if (progress < 0.995) {
+        const lit = glow;
         const p = spine[n];
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, base * 2.2);
         g.addColorStop(0, `rgb(${lit[0]} ${lit[1]} ${lit[2]} / 0.55)`);
@@ -228,7 +263,18 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
     const ro = new ResizeObserver(layout);
     ro.observe(cv);
 
-    if (!motionEnabled()) return () => ro.disconnect();
+    // The palette only settles once the page has scrolled here; pick it up then.
+    const recolor = () => {
+      if (readColors()) render();
+    };
+
+    if (!motionEnabled()) {
+      window.addEventListener('journeychange', recolor);
+      return () => {
+        ro.disconnect();
+        window.removeEventListener('journeychange', recolor);
+      };
+    }
 
     const gctx = gsap.context(() => {
       const state = { p: 0 };
@@ -239,7 +285,15 @@ export function Interlude({ direction = 'forward', label }: { direction?: 'forwa
           progress = state.p;
           render();
         },
-        scrollTrigger: { trigger: el, start: 'top top', end: '+=110%', pin: true, scrub: 0.6, anticipatePin: 1 },
+        scrollTrigger: {
+          trigger: el,
+          start: 'top top',
+          end: '+=110%',
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          onToggle: recolor,
+        },
       });
     }, el);
     ScrollTrigger.sort();

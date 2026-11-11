@@ -265,6 +265,20 @@ html:not(.js-anim) .typed-caret {
     visibility: hidden;
   }
 }
+/* Selected work: the open project's details slide in under the gallery / carousel. */
+@keyframes showcase-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+/* Accordion Gallery labels in the display face. */
+.work-accordion [role='listitem'] > span:last-child > span:last-child {
+  font-family: var(--font-display);
+  font-weight: 380;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.25rem, 1.8vw, 1.75rem);
+}
 .js-anim [data-hero-line] {
   transform: translateY(110%);
 }

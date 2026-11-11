@@ -26,7 +26,7 @@ All text lives in `src/content/`:
 | File | Contents |
 |---|---|
 | `profile.ts` | Name, role, tagline, statement, education, stats, disciplines |
-| `projects.ts` | Projects. Set `cover` to an image path (e.g. `/images/shell.png`) to replace the typographic cover; set `year` too |
+| `projects.ts` | Projects. `poster` is the art in the Selected work gallery (`public/images/work/*.svg`, drawn by `node scripts/make-covers.mjs`; swap in a screenshot path any time). Set `cover` to an image path (e.g. `/images/shell.png`) to replace the case-study page's typographic cover; set `year` too |
 | `skills.ts` | Skill groups (feeds the stack list, marquee, CV and ⌘K) |
 | `contact.ts` | Email and social links |
 | `quips.ts` | The cheesy lines |
@@ -42,7 +42,7 @@ src/
   components/ui/           shadcn/ui primitives (hand-copied, styled to DESIGN.md)
   components/site/         Nav, Footer, CV sheet, ⌘K palette, mobile menu, contribution grid…
   components/motion/       Lenis, preloader, route curtain, scroll progress, page-animation hook
-  components/interaction/  cursor, magnetic, marquee, tilt cover, work preview, glass lens, hero background wrapper, Lottie tick
+  components/interaction/  cursor, magnetic, marquee, tilt cover, work showcase, glass lens, hero background wrapper, Lottie tick
   lib/                     motion tokens, scroll helpers, animation engine, colour journey, contexts
 scripts/                   fetch-activity.mjs, og-image.mjs
 ```
@@ -72,7 +72,7 @@ token is mixed from five base colours, so the whole UI follows. Pinned sections 
 **Prologue** (`sections/Prologue.tsx`) pins on the hero's green and lights up its statement word by word before the page turns lavender.
 Before each colour change a **ribbon interlude** (`sections/Interlude.tsx`) pins and draws a twisting ribbon across the full
 width as you scroll (canvas): one smooth curve with a knot looping above it, tapered ends, lit front and darker back faces, in the
-section's accent colour, with a hex counter running 0x00 → 0xFF (left to right before lavender, right to left before blue). It has no palette of its own, so the new colour only arrives once it releases.
+section's accent colour, with a hex counter running 0x00 → 0xFF (left to right before lavender, right to left before blue). It has no palette of its own, so the new colour only arrives once it releases. It paints incrementally into an offscreen buffer (only the slices uncovered since the last frame), and on touch-only devices `components/motion/SmoothScroll.tsx` turns on ScrollTrigger's `normalizeScroll` so a fast fling can't race past a pin and snap back.
 Behind everything, `components/site/Atmosphere.tsx` draws a slow glow in the palette's `--glow`.
 
 Type: **Fraunces** (variable, optical sizing) for display and headings, with italic Fraunces in the section's accent colour for
@@ -83,6 +83,8 @@ configured in `components/interaction/HeroField.tsx`): particles gather into a c
 approaches and settle back when it leaves; click to burst. The tagline types itself out with a caret
 (`components/motion/TypedText.tsx`), then hands over to React Bits' **Tech Text** (`components/interaction/TechTagline.tsx`):
 hover a letter for its dashed outline and type metrics, drag or flick it and it springs back (desktop, where the line fits on one line).
+
+Selected work (`components/interaction/WorkShowcase.tsx`): on laptops and desktops (768px and up) React Bits' **Accordion Gallery** — hover a panel to open it, click the open one for the case study; on phones React Bits' **Circular Carousel** — swipe the ring, tap the front card. The open project's details sit underneath. Both are vendored in `src/vendor/react-bits/` and load only on the layout that uses them.
 
 Section-level effects: pinned horizontal scroll (`sections/Disciplines.tsx`), stacking cards (`sections/Stack.tsx`),
 hero exit (`sections/Hero.tsx`). Everything is skipped under `prefers-reduced-motion` — if you see no motion at all,
@@ -106,7 +108,7 @@ Chromium refracts; Safari/Firefox get frosted glass. Never put `transform`, `opa
 ## Libraries
 
 GSAP + ScrollTrigger · Lenis · SplitType · Baffle · Ukiyo · Motion · @use-gesture · Atropos · cmdk ·
-css-liquid-glass (vendored) · React Bits Antigravity + Tech Text (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
+css-liquid-glass (vendored) · React Bits Antigravity, Tech Text, Accordion Gallery + Circular Carousel (vendored) · View Transitions API · lottie-web · tsParticles confetti · shadcn/ui (Radix) · Tailwind v4 · React 19 · Vite 8.
 Patterns adapted from Magic UI (marquee, border beam), React Bits (cursor, magnet) and Aceternity (card spotlight).
 
 ## Deploy (Vercel)
